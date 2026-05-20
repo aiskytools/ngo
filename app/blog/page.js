@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import AnimatedSection from "@/app/components/AnimatedSection";
 
 const defaultPosts = [
@@ -16,10 +17,11 @@ export default function BlogPage() {
   const [posts, setPosts] = useState(defaultPosts);
 
   useEffect(() => {
-    fetch("/api/blogs")
-      .then(r => r.ok ? r.json() : [])
+    fetch("/api/blogs?limit=50")
+      .then(r => r.ok ? r.json() : null)
       .then(data => {
-        if (data.length > 0) setPosts([...data, ...defaultPosts]);
+        const items = Array.isArray(data?.items) ? data.items : [];
+        if (items.length > 0) setPosts([...items, ...defaultPosts]);
       })
       .catch(() => {});
   }, []);
@@ -40,11 +42,11 @@ export default function BlogPage() {
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {posts.map((post, i) => (
               <AnimatedSection key={post._id} delay={i * 0.05}>
-                <Link href={post._id.startsWith("pre") ? `/blog/${post._id}` : `/blog/${post._id}`} className="block h-full">
+                <Link href={`/blog/${post._id}`} className="block h-full">
                   <div className="bg-white rounded-3xl overflow-hidden border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-500 h-full flex flex-col">
-                    <div className={`h-44 flex items-center justify-center ${post.image ? "" : "bg-gradient-to-br from-gray-100 to-gray-200"}`}>
+                    <div className={`h-44 relative flex items-center justify-center ${post.image ? "" : "bg-gradient-to-br from-gray-100 to-gray-200"}`}>
                       {post.image ? (
-                        <img src={post.image} alt={post.title} className="w-full h-full object-cover" />
+                        <Image src={post.image} alt={post.title} fill sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw" className="object-cover" />
                       ) : (
                         <span className="text-5xl">{catIcons[post.category] || "📰"}</span>
                       )}

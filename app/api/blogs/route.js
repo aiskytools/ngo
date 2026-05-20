@@ -1,39 +1,73 @@
 import { NextResponse } from "next/server";
 import { getDb } from "@/lib/db";
-import { verifyToken } from "@/lib/auth";
+import { verifyToken, isSameOrigin } from "@/lib/auth";
+import {
+  assertNonEmptyString,
+  assertOptionalString,
+  assertEnum,
+  parsePaginationParams,
+  ValidationError,
+} from "@/lib/validation";
 
-// GET all blogs (public)
-export async function GET() {
+const CATEGORIES = ["General", "Education", "Health", "Relief", "Event"];
+
+// GET all blogs (public, paginated)
+export async function GET(request) {
   try {
+    const { searchParams } = new URL(request.url);
+    const { page, limit, skip } = parsePaginationParams(searchParams);
     const db = await getDb();
-    const blogs = await db.collection("blogs").find({}).sort({ createdAt: -1 }).toArray();
-    const serialized = blogs.map(b => ({ ...b, _id: b._id.toString() }));
-    return NextResponse.json(serialized);
+    const cursor = db
+      .collection("blogs")
+      .find({})
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit);
+    const [items, total] = await Promise.all([
+      cursor.toArray(),
+      db.collection("blogs").countDocuments({}),
+    ]);
+    const serialized = items.map(b => ({ ...b, _id: b._id.toString() }));
+    return NextResponse.json({ items: serialized, page, limit, total });
   } catch (error) {
+    console.error("GET /api/blogs error:", error);
     return NextResponse.json({ error: "Failed to fetch blogs" }, { status: 500 });
   }
 }
 
 // POST new blog (admin only)
 export async function POST(request) {
+  if (!isSameOrigin(request)) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
   const payload = await verifyToken();
   if (!payload) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   try {
     const data = await request.json();
+    const title = assertNonEmptyString(data.title, "title", { max: 300 });
+    const description = assertNonEmptyString(data.description, "description", { max: 20000 });
+    const category = assertEnum(data.category || "General", "category", CATEGORIES);
+    const image = assertOptionalString(data.image, "image", { max: 2000 });
+    const imagePublicId = assertOptionalString(data.imagePublicId, "imagePublicId", { max: 300 });
+
     const db = await getDb();
     const blog = {
-      title: data.title,
-      category: data.category || "General",
-      description: data.description,
-      image: data.image || "",
-      imagePublicId: data.imagePublicId || "",
+      title,
+      category,
+      description,
+      image,
+      imagePublicId,
       createdAt: new Date(),
       updatedAt: new Date(),
     };
     const result = await db.collection("blogs").insertOne(blog);
     return NextResponse.json({ ...blog, _id: result.insertedId.toString() }, { status: 201 });
   } catch (error) {
+    if (error instanceof ValidationError) {
+      return NextResponse.json({ error: error.message }, { status: 400 });
+    }
+    console.error("POST /api/blogs error:", error);
     return NextResponse.json({ error: "Failed to create blog" }, { status: 500 });
   }
 }

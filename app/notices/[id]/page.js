@@ -15,26 +15,24 @@ const typeColors = { Event: "bg-blue-500", Invitation: "bg-amber-500", Program: 
 
 export default function NoticeDetailPage() {
   const { id } = useParams();
-  const [notice, setNotice] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [notice, setNotice] = useState(() => (id && defaultNotices[id]) || null);
+  const [loading, setLoading] = useState(() => !!id && !defaultNotices[id]);
 
   useEffect(() => {
-    if (defaultNotices[id]) {
-      setNotice(defaultNotices[id]);
-      setLoading(false);
-    } else {
-      fetch(`/api/notices/${id}`)
-        .then(r => r.ok ? r.json() : null)
-        .then(data => { setNotice(data); setLoading(false); })
-        .catch(() => setLoading(false));
-    }
+    if (!id || defaultNotices[id]) return;
+    fetch(`/api/notices/${id}`)
+      .then(r => r.ok ? r.json() : null)
+      .then(data => { setNotice(data); setLoading(false); })
+      .catch(() => setLoading(false));
   }, [id]);
 
   const share = () => {
+    if (typeof window === "undefined" || !notice) return;
+    const url = window.location.href;
     if (navigator.share) {
-      navigator.share({ title: notice.title, text: notice.description?.substring(0, 200), url: window.location.href });
-    } else {
-      navigator.clipboard.writeText(window.location.href);
+      navigator.share({ title: notice.title, text: notice.description?.substring(0, 200), url });
+    } else if (navigator.clipboard) {
+      navigator.clipboard.writeText(url);
       alert("Link copied to clipboard!");
     }
   };

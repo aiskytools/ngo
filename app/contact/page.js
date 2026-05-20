@@ -1,8 +1,61 @@
 "use client";
+import { useState } from "react";
 import AnimatedSection from "@/app/components/AnimatedSection";
-import { MapPin, Phone, Mail, Globe, Send } from "lucide-react";
+import { MapPin, Phone, Mail, Globe, Send, Loader2, CheckCircle2, AlertCircle } from "lucide-react";
+
+const INFO = [
+  { icon: MapPin, label: "Address", value: "Shivajinagar, Bank Colony, Jogaiwadi, Ambajogai, Beed – 431517, Maharashtra" },
+  { icon: Phone, label: "Phone", value: "+91 9422242106", href: "tel:+919422242106" },
+  { icon: Mail, label: "Email", value: "santgadgebabango1@gmail.com", href: "mailto:santgadgebabango1@gmail.com" },
+  { icon: Globe, label: "Website", value: "www.santgadgebabango.com", href: "https://www.santgadgebabango.com" },
+];
+
+const SUBJECTS = [
+  "Donation Inquiry",
+  "Volunteer With Us",
+  "Partnership Proposal",
+  "Scholarship Inquiry",
+  "General Query",
+];
 
 export default function ContactPage() {
+  const [status, setStatus] = useState({ state: "idle", message: "" });
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (status.state === "submitting") return;
+
+    const fd = new FormData(e.target);
+    const payload = {
+      name: fd.get("name"),
+      email: fd.get("email"),
+      phone: fd.get("phone"),
+      subject: fd.get("subject"),
+      message: fd.get("message"),
+      website: fd.get("website"), // honeypot
+    };
+
+    setStatus({ state: "submitting", message: "" });
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setStatus({ state: "error", message: data.error || "Failed to send. Please try again." });
+        return;
+      }
+      setStatus({ state: "success", message: "Thank you! Your message has been received." });
+      e.target.reset();
+    } catch {
+      setStatus({ state: "error", message: "Network error. Please try again." });
+    }
+  };
+
+  const submitting = status.state === "submitting";
+
   return (
     <>
       <section className="relative pt-32 pb-20 gradient-mesh overflow-hidden">
@@ -23,12 +76,7 @@ export default function ContactPage() {
                 <h3 className="text-amber-400 font-bold text-lg mb-1">Reach Us</h3>
                 <p className="text-gray-400 text-sm mb-8">We are always happy to connect with people who share our vision.</p>
                 <div className="space-y-6">
-                  {[
-                    { icon: MapPin, label: "Address", value: "Shivajinagar, Bank Colony, Jogaiwadi, Ambajogai, Beed – 431517, Maharashtra" },
-                    { icon: Phone, label: "Phone", value: "+91 9422242106", href: "tel:+919422242106" },
-                    { icon: Mail, label: "Email", value: "santgadgebabango1@gmail.com", href: "mailto:santgadgebabango1@gmail.com" },
-                    { icon: Globe, label: "Website", value: "www.santgadgebabango.com", href: "https://www.santgadgebabango.com" },
-                  ].map(c => (
+                  {INFO.map(c => (
                     <div key={c.label} className="flex gap-4 items-start">
                       <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center flex-shrink-0 text-amber-400"><c.icon size={18} /></div>
                       <div>
@@ -44,7 +92,15 @@ export default function ContactPage() {
                 </div>
               </div>
               <div className="mt-6 rounded-3xl overflow-hidden shadow-lg">
-                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3784.1!2d76.393908!3d18.729091!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTjCsDQzJzQyLjciTiA3NsKwMjMnMzguMSJF!5e0!3m2!1sen!2sin!4v1" width="100%" height="220" style={{ border: 0 }} allowFullScreen loading="lazy" />
+                <iframe
+                  title="Aadhar Manuskicha office location, Ambajogai"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3784.1!2d76.393908!3d18.729091!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTjCsDQzJzQyLjciTiA3NsKwMjMnMzguMSJF!5e0!3m2!1sen!2sin!4v1"
+                  width="100%"
+                  height="220"
+                  style={{ border: 0 }}
+                  allowFullScreen
+                  loading="lazy"
+                />
               </div>
             </AnimatedSection>
 
@@ -53,22 +109,31 @@ export default function ContactPage() {
               <div className="bg-white rounded-3xl p-8 border border-gray-100 shadow-sm">
                 <h3 className="font-[family-name:var(--font-heading)] text-2xl font-bold text-gray-900 mb-2">Send Us a Message</h3>
                 <p className="text-gray-500 text-sm mb-8">We typically respond within 24–48 hours.</p>
-                <form onSubmit={e => { e.preventDefault(); alert("Thank you! Your message has been received."); e.target.reset(); }} className="space-y-4">
-                  <input required placeholder="Full Name *" className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500" />
-                  <input required type="email" placeholder="Email *" className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500" />
-                  <input type="tel" placeholder="Phone" className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500" />
-                  <select className="w-full px-4 py-3 border border-gray-200 rounded-xl text-gray-600 focus:outline-none focus:ring-2 focus:ring-emerald-500">
-                    <option>Select a subject...</option>
-                    <option>Donation Inquiry</option>
-                    <option>Volunteer With Us</option>
-                    <option>Partnership Proposal</option>
-                    <option>Scholarship Inquiry</option>
-                    <option>General Query</option>
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <input name="name" required placeholder="Full Name *" maxLength={200} className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500" />
+                  <input name="email" required type="email" placeholder="Email *" maxLength={254} className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500" />
+                  <input name="phone" type="tel" placeholder="Phone" maxLength={20} className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500" />
+                  <select name="subject" defaultValue="General Query" className="w-full px-4 py-3 border border-gray-200 rounded-xl text-gray-600 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                    {SUBJECTS.map(s => <option key={s} value={s}>{s}</option>)}
                   </select>
-                  <textarea required rows={5} placeholder="Write your message here..." className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 resize-none" />
-                  <button type="submit" className="w-full py-4 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-2xl font-bold text-lg hover:shadow-lg hover:shadow-amber-500/30 hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-center gap-2">
-                    <Send size={18} /> Send Message
+                  <textarea name="message" required rows={5} maxLength={5000} placeholder="Write your message here..." className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 resize-none" />
+                  {/* Honeypot — must remain empty for the submission to be accepted. */}
+                  <input name="website" type="text" tabIndex={-1} aria-hidden="true" autoComplete="off" style={{ position: "absolute", left: "-9999px", width: 1, height: 1, opacity: 0 }} />
+                  <button type="submit" disabled={submitting} className="w-full py-4 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-2xl font-bold text-lg hover:shadow-lg hover:shadow-amber-500/30 hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-60 disabled:hover:translate-y-0 disabled:cursor-not-allowed">
+                    {submitting ? <><Loader2 size={18} className="animate-spin" /> Sending…</> : <><Send size={18} /> Send Message</>}
                   </button>
+                  {status.state === "success" && (
+                    <div className="flex items-start gap-2 px-4 py-3 rounded-xl bg-emerald-50 text-emerald-700 text-sm border border-emerald-100">
+                      <CheckCircle2 size={18} className="flex-shrink-0 mt-0.5" />
+                      <span>{status.message}</span>
+                    </div>
+                  )}
+                  {status.state === "error" && (
+                    <div className="flex items-start gap-2 px-4 py-3 rounded-xl bg-rose-50 text-rose-700 text-sm border border-rose-100">
+                      <AlertCircle size={18} className="flex-shrink-0 mt-0.5" />
+                      <span>{status.message}</span>
+                    </div>
+                  )}
                 </form>
               </div>
             </AnimatedSection>

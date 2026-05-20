@@ -28,7 +28,6 @@ export default function RootLayout({ children }) {
         <Navbar />
         <main className="min-h-screen">{children}</main>
         <Footer />
-        <div id="modal-root"></div>
       </body>
     </html>
   );

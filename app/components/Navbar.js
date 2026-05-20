@@ -26,9 +26,7 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  useEffect(() => {
-    setIsOpen(false);
-  }, [pathname]);
+  const closeMenu = () => setIsOpen(false);
 
   return (
     <nav
@@ -107,6 +105,7 @@ export default function Navbar() {
                 <Link
                   key={link.href}
                   href={link.href}
+                  onClick={closeMenu}
                   className={`block px-4 py-3 rounded-xl text-sm font-medium transition-all ${
                     pathname === link.href
                       ? "bg-emerald-50 text-emerald-700"
@@ -118,6 +117,7 @@ export default function Navbar() {
               ))}
               <Link
                 href="/donate"
+                onClick={closeMenu}
                 className="block mt-4 px-4 py-3 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-xl text-center text-sm font-semibold"
               >
                 💛 Donate Now

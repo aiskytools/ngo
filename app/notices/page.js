@@ -16,10 +16,11 @@ export default function NoticesPage() {
   const [notices, setNotices] = useState(defaultNotices);
 
   useEffect(() => {
-    fetch("/api/notices")
-      .then(r => r.ok ? r.json() : [])
+    fetch("/api/notices?limit=50")
+      .then(r => r.ok ? r.json() : null)
       .then(data => {
-        if (data.length > 0) setNotices([...data, ...defaultNotices]);
+        const items = Array.isArray(data?.items) ? data.items : [];
+        if (items.length > 0) setNotices([...items, ...defaultNotices]);
       })
       .catch(() => {});
   }, []);
@@ -40,7 +41,7 @@ export default function NoticesPage() {
           {notices.map((n, i) => {
             const d = new Date(n.date);
             return (
-              <AnimatedSection key={n._id + i} delay={i * 0.08}>
+              <AnimatedSection key={n._id} delay={i * 0.08}>
                 <Link href={`/notices/${n._id}`} className="block">
                   <div className="bg-white rounded-3xl p-6 border border-gray-100 flex gap-6 items-start hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5">
                     <div className="bg-gray-50 rounded-2xl px-4 py-3 text-center flex-shrink-0 min-w-[70px]">

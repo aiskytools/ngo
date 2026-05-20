@@ -25,13 +25,19 @@ export default function AdminPage() {
 
   // Fetch data
   const fetchPosts = useCallback(async () => {
-    const r = await fetch("/api/blogs");
-    if (r.ok) setPosts(await r.json());
+    const r = await fetch("/api/blogs?limit=100");
+    if (r.ok) {
+      const data = await r.json();
+      setPosts(Array.isArray(data?.items) ? data.items : []);
+    }
   }, []);
 
   const fetchNotices = useCallback(async () => {
-    const r = await fetch("/api/notices");
-    if (r.ok) setNotices(await r.json());
+    const r = await fetch("/api/notices?limit=100");
+    if (r.ok) {
+      const data = await r.json();
+      setNotices(Array.isArray(data?.items) ? data.items : []);
+    }
   }, []);
 
   useEffect(() => {
@@ -47,8 +53,9 @@ export default function AdminPage() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ password: pw }),
     });
-    if (r.ok) { setLoggedIn(true); }
-    else alert("Incorrect password");
+    if (r.ok) { setLoggedIn(true); return; }
+    const data = await r.json().catch(() => ({}));
+    alert(data.error || "Login failed");
   };
 
   const logout = async () => {
@@ -60,6 +67,18 @@ export default function AdminPage() {
   const handleImage = (e) => {
     const file = e.target.files[0];
     if (!file) return;
+    const okTypes = ["image/png", "image/jpeg", "image/webp"];
+    if (!okTypes.includes(file.type)) {
+      alert("Please choose a PNG, JPEG, or WebP image.");
+      e.target.value = "";
+      return;
+    }
+    const MAX = 5 * 1024 * 1024;
+    if (file.size > MAX) {
+      alert("Image must be 5MB or smaller.");
+      e.target.value = "";
+      return;
+    }
     const reader = new FileReader();
     reader.onload = (ev) => {
       setImgPreview(ev.target.result);
@@ -88,61 +107,82 @@ export default function AdminPage() {
   const publishPost = async (e) => {
     e.preventDefault();
     setUploading(true);
-    const fd = new FormData(e.target);
-    let imageUrl = "", imagePublicId = "";
-    if (imgBase64) {
-      const uploaded = await uploadImageToCloud(imgBase64);
-      imageUrl = uploaded.url;
-      imagePublicId = uploaded.publicId;
+    try {
+      const fd = new FormData(e.target);
+      let imageUrl = "", imagePublicId = "";
+      if (imgBase64) {
+        const uploaded = await uploadImageToCloud(imgBase64);
+        imageUrl = uploaded.url;
+        imagePublicId = uploaded.publicId;
+      }
+      const r = await fetch("/api/blogs", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: fd.get("title"),
+          category: fd.get("category"),
+          description: fd.get("desc"),
+          image: imageUrl,
+          imagePublicId,
+        }),
+      });
+      if (!r.ok) {
+        const data = await r.json().catch(() => ({}));
+        alert(data.error || "Failed to publish post");
+        return;
+      }
+      e.target.reset();
+      setImgPreview("");
+      setImgBase64("");
+      fetchPosts();
+    } finally {
+      setUploading(false);
     }
-    await fetch("/api/blogs", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        title: fd.get("title"),
-        category: fd.get("category"),
-        description: fd.get("desc"),
-        image: imageUrl,
-        imagePublicId,
-      }),
-    });
-    e.target.reset();
-    setImgPreview("");
-    setImgBase64("");
-    setUploading(false);
-    fetchPosts();
   };
 
   const updatePost = async (e) => {
     e.preventDefault();
     setUploading(true);
-    const fd = new FormData(e.target);
-    const body = {
-      title: fd.get("title"),
-      category: fd.get("category"),
-      description: fd.get("desc"),
-    };
-    if (imgBase64) {
-      const uploaded = await uploadImageToCloud(imgBase64);
-      body.image = uploaded.url;
-      body.imagePublicId = uploaded.publicId;
-      body.oldImagePublicId = editingPost.imagePublicId;
+    try {
+      const fd = new FormData(e.target);
+      const body = {
+        title: fd.get("title"),
+        category: fd.get("category"),
+        description: fd.get("desc"),
+      };
+      if (imgBase64) {
+        const uploaded = await uploadImageToCloud(imgBase64);
+        body.image = uploaded.url;
+        body.imagePublicId = uploaded.publicId;
+        body.oldImagePublicId = editingPost.imagePublicId;
+      }
+      const r = await fetch(`/api/blogs/${editingPost._id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+      if (!r.ok) {
+        const data = await r.json().catch(() => ({}));
+        alert(data.error || "Failed to update post");
+        return;
+      }
+      setEditingPost(null);
+      setImgPreview("");
+      setImgBase64("");
+      fetchPosts();
+    } finally {
+      setUploading(false);
     }
-    await fetch(`/api/blogs/${editingPost._id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
-    });
-    setEditingPost(null);
-    setImgPreview("");
-    setImgBase64("");
-    setUploading(false);
-    fetchPosts();
   };
 
   const deletePost = async (id) => {
     if (!confirm("Delete this post permanently?")) return;
-    await fetch(`/api/blogs/${id}`, { method: "DELETE" });
+    const r = await fetch(`/api/blogs/${id}`, { method: "DELETE" });
+    if (!r.ok) {
+      const data = await r.json().catch(() => ({}));
+      alert(data.error || "Failed to delete post");
+      return;
+    }
     fetchPosts();
   };
 
@@ -150,7 +190,7 @@ export default function AdminPage() {
   const publishNotice = async (e) => {
     e.preventDefault();
     const fd = new FormData(e.target);
-    await fetch("/api/notices", {
+    const r = await fetch("/api/notices", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -160,6 +200,11 @@ export default function AdminPage() {
         description: fd.get("desc"),
       }),
     });
+    if (!r.ok) {
+      const data = await r.json().catch(() => ({}));
+      alert(data.error || "Failed to publish notice");
+      return;
+    }
     e.target.reset();
     fetchNotices();
   };
@@ -167,7 +212,7 @@ export default function AdminPage() {
   const updateNotice = async (e) => {
     e.preventDefault();
     const fd = new FormData(e.target);
-    await fetch(`/api/notices/${editingNotice._id}`, {
+    const r = await fetch(`/api/notices/${editingNotice._id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -177,13 +222,23 @@ export default function AdminPage() {
         description: fd.get("desc"),
       }),
     });
+    if (!r.ok) {
+      const data = await r.json().catch(() => ({}));
+      alert(data.error || "Failed to update notice");
+      return;
+    }
     setEditingNotice(null);
     fetchNotices();
   };
 
   const deleteNotice = async (id) => {
     if (!confirm("Delete this notice permanently?")) return;
-    await fetch(`/api/notices/${id}`, { method: "DELETE" });
+    const r = await fetch(`/api/notices/${id}`, { method: "DELETE" });
+    if (!r.ok) {
+      const data = await r.json().catch(() => ({}));
+      alert(data.error || "Failed to delete notice");
+      return;
+    }
     fetchNotices();
   };
 
@@ -243,7 +298,7 @@ export default function AdminPage() {
 
               <div onClick={() => fileRef.current?.click()} className="border-2 border-dashed border-gray-200 rounded-2xl p-6 text-center cursor-pointer hover:border-amber-400 transition-colors mb-4 text-gray-400">
                 {(imgPreview || editingPost?.image) ? (
-                  <img src={imgPreview || editingPost?.image} alt="preview" className="max-h-48 mx-auto rounded-xl object-cover" />
+                  <img src={imgPreview || editingPost?.image} alt="Selected blog image preview" className="max-h-48 mx-auto rounded-xl object-cover" />
                 ) : (
                   <><Upload size={24} className="mx-auto mb-2" /><p className="text-sm">📷 Click to add photo</p></>
                 )}

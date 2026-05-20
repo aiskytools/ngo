@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useParams } from "next/navigation";
 import AnimatedSection from "@/app/components/AnimatedSection";
 import { ArrowLeft, Share2, Calendar, Tag } from "lucide-react";
@@ -13,26 +14,24 @@ const defaultPosts = {
 
 export default function BlogDetailPage() {
   const { id } = useParams();
-  const [post, setPost] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [post, setPost] = useState(() => (id && defaultPosts[id]) || null);
+  const [loading, setLoading] = useState(() => !!id && !defaultPosts[id]);
 
   useEffect(() => {
-    if (defaultPosts[id]) {
-      setPost(defaultPosts[id]);
-      setLoading(false);
-    } else {
-      fetch(`/api/blogs/${id}`)
-        .then(r => r.ok ? r.json() : null)
-        .then(data => { setPost(data); setLoading(false); })
-        .catch(() => setLoading(false));
-    }
+    if (!id || defaultPosts[id]) return;
+    fetch(`/api/blogs/${id}`)
+      .then(r => r.ok ? r.json() : null)
+      .then(data => { setPost(data); setLoading(false); })
+      .catch(() => setLoading(false));
   }, [id]);
 
   const share = () => {
+    if (typeof window === "undefined" || !post) return;
+    const url = window.location.href;
     if (navigator.share) {
-      navigator.share({ title: post.title, text: post.description?.substring(0, 200), url: window.location.href });
-    } else {
-      navigator.clipboard.writeText(window.location.href);
+      navigator.share({ title: post.title, text: post.description?.substring(0, 200), url });
+    } else if (navigator.clipboard) {
+      navigator.clipboard.writeText(url);
       alert("Link copied to clipboard!");
     }
   };
@@ -48,7 +47,7 @@ export default function BlogDetailPage() {
       <section className={`relative pt-32 pb-20 overflow-hidden ${post.image ? "" : "gradient-mesh"}`}>
         {post.image && (
           <>
-            <img src={post.image} alt={post.title} className="absolute inset-0 w-full h-full object-cover" />
+            <Image src={post.image} alt={post.title} fill priority sizes="100vw" className="object-cover" />
             <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
           </>
         )}
