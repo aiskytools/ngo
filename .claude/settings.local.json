@@ -4,7 +4,10 @@
       "mcp__plugin_context-mode_context-mode__ctx_batch_execute",
       "mcp__plugin_context-mode_context-mode__ctx_search",
       "Bash(npm install *)",
-      "Bash(npm run *)"
+      "Bash(npm run *)",
+      "Bash(echo \"--- exit: $? ---\")",
+      "Bash(node -e \"console.log\\(require\\('next/package.json'\\).version\\)\")",
+      "Bash(node -e \"console.log\\(require\\('lucide-react/package.json'\\).version\\)\")"
     ]
   }
 }

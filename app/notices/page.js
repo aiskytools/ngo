@@ -20,7 +20,9 @@ export default function NoticesPage() {
       .then(r => r.ok ? r.json() : null)
       .then(data => {
         const items = Array.isArray(data?.items) ? data.items : [];
-        if (items.length > 0) setNotices([...items, ...defaultNotices]);
+        // Show real notices once any exist; the inline defaults are only a fallback
+        // for a fresh database so the page is never empty.
+        if (items.length > 0) setNotices(items);
       })
       .catch(() => {});
   }, []);

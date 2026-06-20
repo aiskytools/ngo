@@ -5,6 +5,8 @@ import AnimatedSection from "@/app/components/AnimatedSection";
 import SectionHeading from "@/app/components/SectionHeading";
 import { motion, animate, useInView } from "framer-motion";
 import { BookOpen, Sprout, Stethoscope, Users, ArrowRight, Heart, GraduationCap, Briefcase, Landmark, MapPin, Sparkles } from "lucide-react";
+import { storySeeds } from "@/lib/storySeeds";
+import { tagColor, themeGradient } from "@/lib/storyMeta";
 
 const stats = [
   { num: 23, label: "Years of Service", icon: Landmark, color: "from-amber-500 to-orange-500" },
@@ -39,13 +41,32 @@ const missions = [
   { icon: Users, title: "Women Empowerment", desc: "Self-help groups, vocational training, and legal literacy for rural women.", color: "from-purple-500 to-violet-500", tags: ["Bachat Gats", "Training"] },
 ];
 
-const stories = [
-  { name: "Raju Bhosale", icon: "👨🏽‍🎓", tag: "Education", tagColor: "bg-blue-500", location: "Farmer's son, Beed", snippet: "Was near dropping out due to financial crisis. Received full scholarship and mentoring.", outcome: "B.Tech Engineer in Pune", gradient: "from-teal-400 to-blue-500" },
-  { name: "Sunita Waghmare", icon: "👩🏽‍⚕️", tag: "Health", tagColor: "bg-rose-500", location: "Landless family, Ambajogai", snippet: "Faced early marriage pressure. We intervened with counseling and financial support.", outcome: "BSc Nursing at Govt Hospital", gradient: "from-orange-400 to-rose-500" },
-  { name: "Kavita Pawar", icon: "🧵", tag: "Women Emp.", tagColor: "bg-purple-500", location: "2-acre rain-fed farm", snippet: "Struggled with farm debt. Received vocational tailoring training and a sewing machine.", outcome: "Owns boutique, employs 3 women", gradient: "from-purple-400 to-violet-500" },
+const tickerItems = [
+  "Education & Literacy",
+  "Farmer Welfare",
+  "Free Medical Camps",
+  "Women's Self-Help Groups",
+  "Youth Skill Development",
+  "Disaster Relief",
 ];
 
+// Home shows up to three featured stories; falls back to the seed set until the
+// admin marks DB stories as featured.
+const featuredSeeds = storySeeds.filter(s => s.featured).slice(0, 3);
+
 export default function HomePage() {
+  const [stories, setStories] = useState(featuredSeeds);
+
+  useEffect(() => {
+    fetch("/api/stories?featured=1&limit=3")
+      .then(r => (r.ok ? r.json() : null))
+      .then(data => {
+        const items = Array.isArray(data?.items) ? data.items : [];
+        if (items.length > 0) setStories(items.slice(0, 3));
+      })
+      .catch(() => {});
+  }, []);
+
   return (
     <>
       {/* HERO */}
@@ -108,7 +129,9 @@ export default function HomePage() {
       {/* MARQUEE TICKER */}
       <div className="bg-slate-900 py-4 overflow-hidden">
         <div className="animate-marquee flex gap-8 whitespace-nowrap">
-          {["Education & Literacy", "Farmer Welfare", "Free Medical Camps", "Women's Self-Help Groups", "Youth Skill Development", "Disaster Relief", "Education & Literacy", "Farmer Welfare", "Free Medical Camps", "Women's Self-Help Groups"].map((item, i) => (
+          {/* The marquee animates translateX(-50%), so the track must be exactly two
+              identical halves to loop seamlessly. Render the base list twice. */}
+          {[...tickerItems, ...tickerItems].map((item, i) => (
             <span key={i} className="flex items-center gap-4 text-white/90 font-medium">
               {item}
               <span className="text-amber-400">✦</span>
@@ -226,18 +249,18 @@ export default function HomePage() {
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {stories.map((s, i) => (
-              <AnimatedSection key={s.name} delay={i * 0.1}>
+              <AnimatedSection key={s._id || s.name} delay={i * 0.1}>
                 <div className="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-500 border border-gray-100">
-                  <div className={`bg-gradient-to-r ${s.gradient} h-40 flex items-center justify-center relative`}>
+                  <div className={`bg-gradient-to-r ${themeGradient(s.theme)} h-40 flex items-center justify-center relative`}>
                     <span className="text-6xl">{s.icon}</span>
-                    <span className={`absolute top-4 right-4 ${s.tagColor} text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg`}>
+                    <span className={`absolute top-4 right-4 ${tagColor(s.tag)} text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg`}>
                       {s.tag}
                     </span>
                   </div>
                   <div className="p-6">
                     <h3 className="font-[family-name:var(--font-heading)] text-xl font-bold text-gray-900 mb-1">{s.name}</h3>
                     <p className="text-gray-400 text-xs mb-3">📍 {s.location}</p>
-                    <p className="text-gray-500 text-sm leading-relaxed mb-4">{s.snippet}</p>
+                    <p className="text-gray-500 text-sm leading-relaxed mb-4">{s.snippet || `${s.background?.slice(0, 120)}…`}</p>
                     <div className="pt-4 border-t border-gray-100">
                       <span className="text-emerald-700 font-semibold text-sm">
                         <strong>Today:</strong> {s.outcome}

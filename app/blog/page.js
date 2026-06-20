@@ -21,7 +21,9 @@ export default function BlogPage() {
       .then(r => r.ok ? r.json() : null)
       .then(data => {
         const items = Array.isArray(data?.items) ? data.items : [];
-        if (items.length > 0) setPosts([...items, ...defaultPosts]);
+        // Show real posts once any exist; the inline defaults are only a fallback
+        // for a fresh database so the page is never empty.
+        if (items.length > 0) setPosts(items);
       })
       .catch(() => {});
   }, []);

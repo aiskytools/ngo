@@ -127,7 +127,7 @@ export default function DonatePage() {
 
   return (
     <>
-      <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="lazyOnload" />
+      <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="afterInteractive" />
       <section className="relative pt-32 pb-20 bg-gray-950 overflow-hidden">
         <div className="absolute inset-0">
           <div className="absolute top-1/3 left-1/4 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl" />

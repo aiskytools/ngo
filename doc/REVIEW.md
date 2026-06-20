@@ -2,6 +2,21 @@
 
 Findings from the 2026-05-20 audit pass. The Critical / High / Medium items were fixed in the bug-fix branch; the items below are deferred (Low severity, polish, or follow-ups requiring product input).
 
+> **Update — 2026-06-21:** several deferred items have since been implemented while building the
+> full admin portal:
+> - ✅ **Admin contacts & donations viewer** — built as the **Messages** and **Donations** tabs in
+>   `/admin` (with offline-donation entry and status management).
+> - ✅ **Admin session refresh** — the portal now polls `/api/auth/check` every 5 min and returns to
+>   the login screen on expiry.
+> - ✅ **Stories are now CMS-managed** — new `stories` collection + admin tab; `/stories` and the home
+>   page read from the DB with `lib/storySeeds.js` as the empty-DB fallback.
+> - ✅ **Blog/Notices seed data** is now a fallback only (shown when the DB is empty) instead of always
+>   being appended to live content.
+> - ✅ **Security headers** — CSP and hardening headers added in `next.config.mjs` (see `doc/security.md`).
+>
+> Still open below: Razorpay webhooks, Redis-backed rate limiting, structured logging, transactional
+> email (80G receipts), a one-shot seed script, and the npm-audit follow-up.
+
 ## Setup checklist for whoever finishes the deployment
 
 Before going to production, complete these steps (they are blocking but were not code changes):
