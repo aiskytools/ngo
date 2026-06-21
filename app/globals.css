@@ -1,4 +1,8 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+/* Class-based dark mode (scoped to elements under a `.dark` ancestor — used by the admin panel). */
+@custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
   --color-primary: #064e3b;
@@ -18,6 +22,22 @@
 /* Base */
 html {
   scroll-behavior: smooth;
+}
+
+/* Accessibility: visible keyboard focus for elements without an explicit focus style. */
+:focus-visible {
+  outline: 2px solid var(--color-primary-light, #059669);
+  outline-offset: 2px;
+}
+
+/* Accessibility + performance: honor reduced-motion preference. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 body {
@@ -95,4 +115,70 @@ body {
 
 .glow-gold {
   box-shadow: 0 0 30px rgba(217, 119, 6, 0.25), 0 0 60px rgba(217, 119, 6, 0.1);
+}
+
+/* ── Rich text (Tiptap) editor + rendered content ─────────────── */
+.ProseMirror {
+  outline: none;
+  min-height: 14rem;
+}
+.ProseMirror:focus {
+  outline: none;
+}
+/* Placeholder for empty editor */
+.ProseMirror p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  color: #9ca3af;
+  pointer-events: none;
+  height: 0;
+}
+/* Tables in the editor and in rendered content */
+.ProseMirror table,
+.prose table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1rem 0;
+}
+.ProseMirror th,
+.ProseMirror td,
+.prose th,
+.prose td {
+  border: 1px solid #d1d5db;
+  padding: 0.4rem 0.6rem;
+  vertical-align: top;
+}
+.ProseMirror th,
+.prose th {
+  background: #f9fafb;
+  font-weight: 600;
+}
+/* Responsive 16:9 video embeds (YouTube) in editor + content */
+.ProseMirror div[data-youtube-video],
+.prose div[data-youtube-video] {
+  margin: 1rem 0;
+}
+.ProseMirror iframe,
+.prose iframe {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  height: auto;
+  border: 0;
+  border-radius: 0.5rem;
+}
+.prose img,
+.ProseMirror img {
+  border-radius: 0.5rem;
+}
+/* Selected table cells while editing */
+.ProseMirror .selectedCell:after {
+  background: rgba(217, 119, 6, 0.12);
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.ProseMirror td,
+.ProseMirror th {
+  position: relative;
 }

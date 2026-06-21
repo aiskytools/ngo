@@ -37,10 +37,12 @@ plus the third-party setup (MongoDB, Cloudinary, Razorpay) and a go-live checkli
    Next.js — no build settings to change (`npm run build` / output handled automatically).
 3. **Settings → Environment Variables** — add every variable from
    [Configuration](./configuration.md) for the **Production** (and Preview, if used) environment:
-   `MONGODB_URI`, `JWT_SECRET`, `ADMIN_PASSWORD_HASH`, `APP_ORIGIN`, the three `CLOUDINARY_*`
-   (+ `CLOUDINARY_FOLDER`), and the three Razorpay vars.
-4. Set **`APP_ORIGIN`** to your production URL (e.g. `https://aadharmanuskicha.org`). This must match
-   the domain users actually load, or all writes return 403.
+   `MONGODB_URI`, `JWT_SECRET`, `ADMIN_PASSWORD_HASH`, `APP_ORIGIN`, `NEXT_PUBLIC_SITE_URL`, the three
+   `CLOUDINARY_*` (+ `CLOUDINARY_FOLDER`), and the three Razorpay vars. Optionally
+   `NEXT_PUBLIC_GA_ID` and `NEXT_PUBLIC_WHATSAPP_NUMBER`.
+4. Set **`APP_ORIGIN`** and **`NEXT_PUBLIC_SITE_URL`** to your production URL (e.g.
+   `https://aadharmanuskicha.org`). `APP_ORIGIN` must match the domain users load (or writes 403);
+   `NEXT_PUBLIC_SITE_URL` is read at **build time** and drives canonical/OG/sitemap URLs.
 5. **Deploy.** Vercel builds and gives you a `*.vercel.app` URL.
 6. **Custom domain:** Settings → Domains → add your domain and follow the DNS instructions. After the
    domain is live, **update `APP_ORIGIN`** to the custom domain and redeploy.
@@ -113,13 +115,19 @@ Terminate TLS at nginx/Caddy (e.g. Let's Encrypt). The app's `Strict-Transport-S
 
 ## Post-deploy checklist
 
-- [ ] Home, About, Focus, Stories, Blog, Notices, Contact, Donate all load over HTTPS.
-- [ ] `/admin` login works with the production password; the dashboard loads all five tabs.
+- [ ] `/` redirects to `/en`; `/en`, `/hi`, `/mr` all load and the navbar language switcher works.
+- [ ] Home, About, Focus, Stories, Blog, Notices, Enquiry, Contact, Donate all load over HTTPS.
+- [ ] `/<locale>/admin` login works with the production password; the dashboard loads all six tabs.
 - [ ] Create a test blog post / notice / story → it appears on the public page → delete it.
 - [ ] Submit the contact form → it appears under **Messages**.
 - [ ] Complete a donation → it appears under **Donations** as `paid`.
-- [ ] `APP_ORIGIN` matches the live domain (no admin 403s).
+- [ ] Submit the `/enquiry` form → it appears under **Enquiries** with the unread badge.
+- [ ] `APP_ORIGIN` and `NEXT_PUBLIC_SITE_URL` match the live domain (no admin 403s; correct canonicals).
+- [ ] `https://yourdomain.org/robots.txt` and `/sitemap.xml` load and reference the live domain.
 - [ ] Security headers are present (see below) and `/admin` is `noindex`.
+- [ ] `npm run backup` works; schedule it (cron/Task Scheduler) — see [Integrations](./integrations.md#database-backups).
+- [ ] (If used) `NEXT_PUBLIC_GA_ID` set and GA4 Realtime shows traffic; WhatsApp button opens a chat.
+- [ ] (If used) Resend domain verified, `RESEND_API_KEY`/`ADMIN_EMAIL`/`EMAIL_FROM` set; a test contact/enquiry/donation delivers email.
 - [ ] MongoDB Atlas backups enabled; network access scoped as tightly as practical.
 
 ### Verify security headers

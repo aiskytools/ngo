@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { signToken, getTokenCookieOptions, isSameOrigin } from "@/lib/auth";
 import { rateLimit, getClientIp } from "@/lib/rateLimit";
+import { notifyAdminLogin } from "@/lib/email";
 
 export async function POST(request) {
   if (!isSameOrigin(request)) {
@@ -48,6 +49,14 @@ export async function POST(request) {
   }
 
   const token = await signToken();
+
+  // Security alert to the admin (no-op until email is configured).
+  await notifyAdminLogin({
+    ip,
+    userAgent: request.headers.get("user-agent"),
+    time: new Date().toUTCString(),
+  }).catch(() => {});
+
   const response = NextResponse.json({ success: true });
   response.cookies.set(getTokenCookieOptions(token));
   return response;

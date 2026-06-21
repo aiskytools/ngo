@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getDb } from "@/lib/db";
 import { isSameOrigin } from "@/lib/auth";
 import { rateLimit, getClientIp } from "@/lib/rateLimit";
+import { notifyContact } from "@/lib/email";
 import {
   assertNonEmptyString,
   assertOptionalString,
@@ -63,6 +64,9 @@ export async function POST(request) {
       createdAt: new Date(),
       ip,
     });
+
+    // Notify the NGO (no-op until email is configured; never blocks the response on failure).
+    await notifyContact({ name, email, phone, subject, message, ip }).catch(() => {});
 
     return NextResponse.json({ success: true });
   } catch (error) {

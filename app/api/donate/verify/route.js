@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import crypto from "crypto";
 import { getDb } from "@/lib/db";
 import { isSameOrigin } from "@/lib/auth";
+import { notifyDonation } from "@/lib/email";
 
 export async function POST(request) {
   if (!isSameOrigin(request)) {
@@ -65,6 +66,20 @@ export async function POST(request) {
         },
       }
     );
+
+    // Receipt to donor + notification to admin (no-op until email is configured).
+    const donation = await db.collection("donations").findOne({ orderId });
+    if (donation) {
+      await notifyDonation({
+        name: donation.donor?.name,
+        email: donation.donor?.email,
+        phone: donation.donor?.phone,
+        amountInr: donation.amountInr,
+        fund: donation.donor?.fund,
+        paymentId,
+      }).catch(() => {});
+    }
+
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("POST /api/donate/verify error:", error);

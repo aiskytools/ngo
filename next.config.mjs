@@ -1,3 +1,7 @@
+import createNextIntlPlugin from "next-intl/plugin";
+
+const withNextIntl = createNextIntlPlugin("./i18n/request.js");
+
 /** @type {import('next').NextConfig} */
 
 const isProd = process.env.NODE_ENV === "production";
@@ -6,6 +10,7 @@ const isProd = process.env.NODE_ENV === "production";
 //   - Razorpay checkout (script + modal iframe + API calls)
 //   - Cloudinary (uploaded images)
 //   - Google Maps (contact-page embed)
+//   - Google Analytics / Tag Manager (gtag.js — inert unless NEXT_PUBLIC_GA_ID is set)
 // 'unsafe-inline' is required for Next.js's hydration/bootstrap inline scripts and
 // for injected styles. The CSP is only enforced in production so that `next dev`'s
 // HMR (which relies on eval + websockets) keeps working.
@@ -15,11 +20,11 @@ const csp = [
   "object-src 'none'",
   "frame-ancestors 'self'",
   "form-action 'self' https://*.razorpay.com",
-  "script-src 'self' 'unsafe-inline' https://checkout.razorpay.com https://*.razorpay.com",
+  "script-src 'self' 'unsafe-inline' https://checkout.razorpay.com https://*.razorpay.com https://www.googletagmanager.com",
   "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' data: blob: https://res.cloudinary.com",
+  "img-src 'self' data: blob: https://res.cloudinary.com https://www.googletagmanager.com https://www.google-analytics.com",
   "font-src 'self' data:",
-  "connect-src 'self' https://*.razorpay.com",
+  "connect-src 'self' https://*.razorpay.com https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com",
   "frame-src 'self' https://*.razorpay.com https://www.google.com https://maps.google.com",
 ].join("; ");
 
@@ -58,4 +63,4 @@ const nextConfig = {
   },
 };
 
-export default nextConfig;
+export default withNextIntl(nextConfig);

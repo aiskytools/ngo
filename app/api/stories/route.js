@@ -10,6 +10,7 @@ import {
   parsePaginationParams,
   ValidationError,
 } from "@/lib/validation";
+import { sanitizeRichHtml } from "@/lib/sanitizeHtml";
 
 function parseStory(data) {
   const name = assertNonEmptyString(data.name, "name", { max: 200 });
@@ -17,8 +18,9 @@ function parseStory(data) {
   const tag = assertEnum(data.tag || "Education", "tag", STORY_TAGS);
   const theme = assertEnum(data.theme || "teal", "theme", STORY_THEME_KEYS);
   const icon = assertOptionalString(data.icon, "icon", { max: 16 }) || "🌟";
-  const background = assertNonEmptyString(data.background, "background", { max: 5000 });
-  const intervention = assertNonEmptyString(data.intervention, "intervention", { max: 5000 });
+  // background + intervention are rich HTML (sanitized); outcome is a short plain highlight.
+  const background = sanitizeRichHtml(assertNonEmptyString(data.background, "background", { max: 20000 }));
+  const intervention = sanitizeRichHtml(assertNonEmptyString(data.intervention, "intervention", { max: 20000 }));
   const outcome = assertNonEmptyString(data.outcome, "outcome", { max: 2000 });
   const featured = data.featured === undefined ? false : assertBoolean(data.featured, "featured");
   return { name, location, tag, theme, icon, background, intervention, outcome, featured };

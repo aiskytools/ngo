@@ -9,11 +9,19 @@ Built with **Next.js 16 (App Router) + React 19**, MongoDB Atlas, Cloudinary, an
 
 ## What this website does
 
-- **Public site** — Home, About, Focus Areas, Stories of Change, Blog, Notices, Contact, and a
-  Razorpay-powered **Donate** page (with 80G tax-exemption messaging and bank-transfer details).
-- **Admin portal** (`/admin`) — a password-protected dashboard where the team manages **everything**:
-  blog posts, notices, success stories, donations (online + manually-recorded offline), and contact
-  form submissions.
+- **Public site** — Home, About, Focus Areas, Stories of Change, Blog, Notices, Enquiry, Contact, and
+  a Razorpay-powered **Donate** page (with 80G tax-exemption messaging and bank-transfer details).
+- **Admin portal** (`/admin`) — a password-protected dashboard (with an **Overview** of metrics +
+  charts and a **dark mode**) where the team manages **everything**: blog posts and success stories via
+  a **rich-text editor** (headings, lists, tables, links, image & YouTube embeds — saved as sanitized
+  HTML), plus notices, donations (online + manually-recorded offline), categorized enquiries (with an
+  unread badge), and contact form submissions.
+- **Multilingual** — English / Hindi / Marathi via URL-based locale routing (`/en`, `/hi`, `/mr`) with
+  a navbar language switcher and per-URL hreflang.
+- **Discoverable & measurable** — dynamic `sitemap.xml`/`robots.txt`, Open Graph/Twitter/JSON-LD SEO,
+  optional Google Analytics 4, a floating WhatsApp button, Cloudinary image optimization, optional
+  **transactional email** (Resend) for contact/enquiry/donation/login, and a one-command database
+  backup (`npm run backup`).
 - **Secure by default** — JWT admin auth, same-origin (CSRF) protection on every write, rate limiting,
   server-side input validation, verified Razorpay signatures, and hardened HTTP security headers.
 
@@ -26,11 +34,13 @@ Built with **Next.js 16 (App Router) + React 19**, MongoDB Atlas, Cloudinary, an
 | 1 | [Getting Started](./getting-started.md) | Prerequisites, install, generate secrets, run locally, first admin login |
 | 2 | [Configuration](./configuration.md) | Every environment variable explained, with where to get each value |
 | 3 | [Architecture](./architecture.md) | Tech stack, folder layout, MongoDB collections, request lifecycle |
-| 4 | [Admin Guide](./admin-guide.md) | Using the dashboard: login/session + all five managers |
+| 4 | [Admin Guide](./admin-guide.md) | Using the dashboard: login/session + all six managers |
 | 5 | [API Reference](./api-reference.md) | Every endpoint, method, auth requirement, and payload |
 | 6 | [Deployment](./deployment.md) | **Vercel + self-hosted**, MongoDB/Cloudinary/Razorpay setup, go-live checklist |
 | 7 | [Security](./security.md) | Auth, CSRF, rate limiting, payment verification, CSP & headers |
-| 8 | [Code Review & Deferred Items](./REVIEW.md) | Findings from the audit and intentionally-deferred follow-ups |
+| 8 | [Integrations & Operations](./integrations.md) | SEO, Google Analytics, WhatsApp, image optimization, backups |
+| 9 | [Internationalization](./i18n.md) | Multi-language (en/hi/mr) routing, switcher, translations, hreflang |
+| 10 | [Code Review & Deferred Items](./REVIEW.md) | Findings from the audit and intentionally-deferred follow-ups |
 
 ---
 

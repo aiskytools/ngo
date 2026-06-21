@@ -8,6 +8,7 @@ import {
   parsePaginationParams,
   ValidationError,
 } from "@/lib/validation";
+import { sanitizeRichHtml, htmlToExcerpt } from "@/lib/sanitizeHtml";
 
 const CATEGORIES = ["General", "Education", "Health", "Relief", "Event"];
 
@@ -46,16 +47,25 @@ export async function POST(request) {
   try {
     const data = await request.json();
     const title = assertNonEmptyString(data.title, "title", { max: 300 });
-    const description = assertNonEmptyString(data.description, "description", { max: 20000 });
     const category = assertEnum(data.category || "General", "category", CATEGORIES);
     const image = assertOptionalString(data.image, "image", { max: 2000 });
     const imagePublicId = assertOptionalString(data.imagePublicId, "imagePublicId", { max: 300 });
+
+    // Rich body (sanitized HTML). `description` is a short plain-text excerpt used
+    // for cards / SEO — supplied explicitly or derived from the content.
+    const contentHtml = sanitizeRichHtml(assertOptionalString(data.contentHtml, "content", { max: 200000 }));
+    let description = assertOptionalString(data.description, "description", { max: 500 });
+    if (!description) description = htmlToExcerpt(contentHtml, 200);
+    if (!contentHtml && !description) {
+      throw new ValidationError("Content is required");
+    }
 
     const db = await getDb();
     const blog = {
       title,
       category,
       description,
+      contentHtml,
       image,
       imagePublicId,
       createdAt: new Date(),

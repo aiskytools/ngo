@@ -6,9 +6,22 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "backup": "node scripts/backup.js"
   },
   "dependencies": {
+    "@tailwindcss/typography": "^0.5.20",
+    "@tiptap/extension-image": "^3.27.1",
+    "@tiptap/extension-link": "^3.27.1",
+    "@tiptap/extension-table": "^3.27.1",
+    "@tiptap/extension-table-cell": "^3.27.1",
+    "@tiptap/extension-table-header": "^3.27.1",
+    "@tiptap/extension-table-row": "^3.27.1",
+    "@tiptap/extension-underline": "^3.27.1",
+    "@tiptap/extension-youtube": "^3.27.1",
+    "@tiptap/pm": "^3.27.1",
+    "@tiptap/react": "^3.27.1",
+    "@tiptap/starter-kit": "^3.27.1",
     "bcryptjs": "^3.0.3",
     "cloudinary": "^2.9.0",
     "framer-motion": "^12.38.0",
@@ -16,9 +29,12 @@
     "lucide-react": "^1.7.0",
     "mongodb": "^7.1.1",
     "next": "16.2.1",
+    "next-intl": "^4.13.0",
     "razorpay": "^2.9.6",
     "react": "19.2.4",
-    "react-dom": "19.2.4"
+    "react-dom": "19.2.4",
+    "resend": "^6.14.0",
+    "sanitize-html": "^2.17.5"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

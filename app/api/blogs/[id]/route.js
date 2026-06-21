@@ -10,6 +10,7 @@ import {
   assertEnum,
   ValidationError,
 } from "@/lib/validation";
+import { sanitizeRichHtml, htmlToExcerpt } from "@/lib/sanitizeHtml";
 
 const CATEGORIES = ["General", "Education", "Health", "Relief", "Event"];
 
@@ -52,8 +53,15 @@ export async function PUT(request, { params }) {
     if (data.category !== undefined) {
       updateFields.category = assertEnum(data.category, "category", CATEGORIES);
     }
+    if (data.contentHtml !== undefined) {
+      updateFields.contentHtml = sanitizeRichHtml(assertOptionalString(data.contentHtml, "content", { max: 200000 }));
+      // Refresh the excerpt unless an explicit description is also being set below.
+      if (data.description === undefined) {
+        updateFields.description = htmlToExcerpt(updateFields.contentHtml, 200);
+      }
+    }
     if (data.description !== undefined) {
-      updateFields.description = assertNonEmptyString(data.description, "description", { max: 20000 });
+      updateFields.description = assertOptionalString(data.description, "description", { max: 500 });
     }
     if (data.image !== undefined) {
       updateFields.image = assertOptionalString(data.image, "image", { max: 2000 });

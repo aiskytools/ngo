@@ -1,0 +1,65 @@
+{
+  "meta": {
+    "title": "Aadhar Manuskicha | आधार माणुसकीचा",
+    "description": "Inspired by Sant Gadgebaba, we transform rural lives through education, healthcare, women empowerment, and sustainable community development in Marathwada, Maharashtra."
+  },
+  "language": {
+    "label": "Language",
+    "en": "English",
+    "hi": "हिन्दी",
+    "mr": "मराठी"
+  },
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "focus": "Focus Areas",
+    "stories": "Stories",
+    "blog": "Blog",
+    "notices": "Notices",
+    "enquiry": "Enquiry",
+    "contact": "Contact",
+    "donate": "Donate"
+  },
+  "footer": {
+    "tagline": "Inspired by Sant Gadgebaba, transforming rural lives through education, healthcare, and community development since 2001.",
+    "quote": "माणुसकी हीच खरी श्रीमंती",
+    "quickLinks": "Quick Links",
+    "aboutUs": "About Us",
+    "focusAreas": "Focus Areas",
+    "successStories": "Success Stories",
+    "blogUpdates": "Blog & Updates",
+    "enquiry": "Enquiry",
+    "donate": "Donate",
+    "contact": "Contact",
+    "supportUs": "Support Us",
+    "supportText": "Your ₹500 can change a child's future. Every contribution matters.",
+    "donateNow": "Donate Now",
+    "rights": "All rights reserved."
+  },
+  "home": {
+    "established": "Est. 18 July 2001 · Ambajogai, Maharashtra",
+    "heroLeadPrefix": "Every Life Deserves a",
+    "heroLeadHighlight": "Strong Aadhar",
+    "heroSubtitle": "Inspired by Sant Gadgebaba, we transform rural lives through education, healthcare, women empowerment, and sustainable community development in Marathwada.",
+    "donateNow": "Donate Now",
+    "ourStory": "Our Story",
+    "impactLabel": "Our Impact",
+    "impactTitle": "Making a Real Difference",
+    "missionLabel": "Why We Exist",
+    "missionTitle": "Our Core Mission",
+    "missionDesc": "We work at the grassroots level to address the most pressing challenges faced by rural communities in Marathwada.",
+    "storiesLabel": "Real Impact",
+    "storiesTitle": "Stories of Change",
+    "viewAllStories": "View All Stories",
+    "ctaTitle": "Your ₹500 Can Change a Child's Future",
+    "ctaText": "Every contribution, no matter the size, directly supports our grassroots initiatives. Join us in making humanity the greatest wealth.",
+    "statYears": "Years of Service",
+    "statStudents": "Students Supported",
+    "statVillages": "Villages Reached",
+    "statLives": "Lives Changed",
+    "pillarEducation": "Education",
+    "pillarRural": "Rural Dev",
+    "pillarHealth": "Health",
+    "pillarWomen": "Women"
+  }
+}

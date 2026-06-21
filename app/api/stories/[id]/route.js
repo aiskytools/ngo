@@ -11,6 +11,7 @@ import {
   assertBoolean,
   ValidationError,
 } from "@/lib/validation";
+import { sanitizeRichHtml } from "@/lib/sanitizeHtml";
 
 // GET single story (public)
 export async function GET(request, { params }) {
@@ -48,8 +49,8 @@ export async function PUT(request, { params }) {
     if (data.tag !== undefined) updateFields.tag = assertEnum(data.tag, "tag", STORY_TAGS);
     if (data.theme !== undefined) updateFields.theme = assertEnum(data.theme, "theme", STORY_THEME_KEYS);
     if (data.icon !== undefined) updateFields.icon = assertOptionalString(data.icon, "icon", { max: 16 }) || "🌟";
-    if (data.background !== undefined) updateFields.background = assertNonEmptyString(data.background, "background", { max: 5000 });
-    if (data.intervention !== undefined) updateFields.intervention = assertNonEmptyString(data.intervention, "intervention", { max: 5000 });
+    if (data.background !== undefined) updateFields.background = sanitizeRichHtml(assertNonEmptyString(data.background, "background", { max: 20000 }));
+    if (data.intervention !== undefined) updateFields.intervention = sanitizeRichHtml(assertNonEmptyString(data.intervention, "intervention", { max: 20000 }));
     if (data.outcome !== undefined) updateFields.outcome = assertNonEmptyString(data.outcome, "outcome", { max: 2000 });
     if (data.featured !== undefined) updateFields.featured = assertBoolean(data.featured, "featured");
 

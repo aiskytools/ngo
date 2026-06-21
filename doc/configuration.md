@@ -20,8 +20,17 @@ in production they're set in your host's dashboard (see [Deployment](./deploymen
 | `RAZORPAY_KEY_ID` | ⬤ | `lib/razorpay.js` | Razorpay key id (server side). |
 | `RAZORPAY_KEY_SECRET` | ⬤ | `lib/razorpay.js`, donate/verify | Razorpay secret. Used to create orders and verify payment signatures. |
 | `NEXT_PUBLIC_RAZORPAY_KEY_ID` | ⬤ | donate page | Razorpay key id exposed to the browser checkout. **Same value** as `RAZORPAY_KEY_ID`. |
+| `NEXT_PUBLIC_SITE_URL` | ➖ | SEO (`lib/site.js`, sitemap, robots, OG) | Public site URL used for canonical/OG URLs, `sitemap.xml`, and `robots.txt`. Defaults to `http://localhost:3000`. **Set this at build time in production.** |
+| `NEXT_PUBLIC_GA_ID` | ➖ | `Analytics` / `lib/analytics.js` | Google Analytics 4 Measurement ID (`G-XXXXXXXX`). Analytics stays fully **inert** until this is set. |
+| `NEXT_PUBLIC_WHATSAPP_NUMBER` | ➖ | floating WhatsApp button | Number (digits, with country code) for the WhatsApp button. Defaults to `919422242106`. |
+| `RESEND_API_KEY` | ➖ | `lib/email.js` | Resend API key. Email notifications stay **inert** until this and `ADMIN_EMAIL` are both set. |
+| `ADMIN_EMAIL` | ➖ | `lib/email.js` | Destination for admin notification emails (contact, enquiry, donation, login). |
+| `EMAIL_FROM` | ➖ | `lib/email.js` | Sender, e.g. `Aadhar Manuskicha <noreply@yourdomain.org>`. Must be a Resend-verified domain in production. Defaults to `onboarding@resend.dev` (Resend test sender). |
 
 Legend: ✅ required to boot · ⬤ required for that feature (images / payments) · ➖ optional with a default.
+
+> `NEXT_PUBLIC_*` variables are read at **build time** and inlined into the client bundle — set them
+> before `npm run build` (or in your host's build environment), not just at runtime.
 
 > Only variables prefixed `NEXT_PUBLIC_` are sent to the browser. Everything else stays server-side.
 
@@ -52,6 +61,16 @@ CLOUDINARY_FOLDER=ngo_website
 RAZORPAY_KEY_ID=rzp_test_xxxxxxxxxxxx
 RAZORPAY_KEY_SECRET=your_key_secret
 NEXT_PUBLIC_RAZORPAY_KEY_ID=rzp_test_xxxxxxxxxxxx
+
+# ── SEO / Analytics / WhatsApp (optional) ───────────────────
+NEXT_PUBLIC_SITE_URL=http://localhost:3000      # set to your real domain in production
+NEXT_PUBLIC_GA_ID=                              # G-XXXXXXXX — leave blank to disable analytics
+NEXT_PUBLIC_WHATSAPP_NUMBER=919422242106         # digits incl. country code
+
+# ── Email notifications (Resend, optional) ──────────────────
+RESEND_API_KEY=                                 # from resend.com — blank = email disabled
+ADMIN_EMAIL=                                    # where admin notifications are sent
+EMAIL_FROM=Aadhar Manuskicha <onboarding@resend.dev>   # use a verified domain in production
 ```
 
 ---

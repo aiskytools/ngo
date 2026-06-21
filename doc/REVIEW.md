@@ -13,9 +13,11 @@ Findings from the 2026-05-20 audit pass. The Critical / High / Medium items were
 > - ✅ **Blog/Notices seed data** is now a fallback only (shown when the DB is empty) instead of always
 >   being appended to live content.
 > - ✅ **Security headers** — CSP and hardening headers added in `next.config.mjs` (see `doc/security.md`).
+> - ✅ **Transactional email** — Resend integration (contact/enquiry/donation/login) via `lib/email.js`
+>   (see `doc/integrations.md#email-notifications-resend`). The formal 80G receipt document is still manual.
 >
-> Still open below: Razorpay webhooks, Redis-backed rate limiting, structured logging, transactional
-> email (80G receipts), a one-shot seed script, and the npm-audit follow-up.
+> Still open below: Razorpay webhooks, Redis-backed rate limiting, structured logging, a one-shot
+> seed script, and the npm-audit follow-up.
 
 ## Setup checklist for whoever finishes the deployment
 

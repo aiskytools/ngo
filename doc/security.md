@@ -67,6 +67,23 @@ leaking internals.
 - `deleteImage` **refuses to delete** any public id outside `CLOUDINARY_FOLDER`, so a crafted id can't
   delete arbitrary assets.
 
+## Rich-text HTML sanitization (XSS)
+
+Blog bodies and story narratives are authored in a rich-text (Tiptap) editor and stored as HTML, so
+they pass through a strict **server-side sanitizer** (`lib/sanitizeHtml.js`, built on `sanitize-html`)
+**before being saved** — the authoritative defense against stored XSS:
+
+- **Allowlist only** — a fixed set of tags (headings, lists, tables, blockquote, code, links, images,
+  formatting) and attributes. Everything else is discarded.
+- **Scripts & event handlers stripped** — `<script>`, `onerror`, `onclick`, etc. never survive.
+- **URL schemes restricted** — `javascript:` links are dropped; images allow only `http(s)`.
+- **iframes limited to YouTube** — `allowedIframeHostnames` blocks every non-YouTube embed.
+- **Links hardened** — every `<a>` is forced to `rel="noopener noreferrer nofollow" target="_blank"`.
+
+Because content is sanitized on write, the public site renders the stored HTML directly. Seed/sample
+content shipped in the repo is trusted (not user input). The CSP (below) is a second layer that blocks
+inline-script execution regardless.
+
 ## Bot mitigation
 
 - The contact form includes a hidden **honeypot** field (`website`). If a bot fills it, the server

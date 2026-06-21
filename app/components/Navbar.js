@@ -1,24 +1,27 @@
 "use client";
 import { useState, useEffect } from "react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { Link, usePathname } from "@/i18n/navigation";
+import { useTranslations } from "next-intl";
 import { Menu, X, Heart } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import LanguageSwitcher from "./LanguageSwitcher";
 
 const navLinks = [
-  { href: "/", label: "Home" },
-  { href: "/about", label: "About" },
-  { href: "/focus", label: "Focus Areas" },
-  { href: "/stories", label: "Stories" },
-  { href: "/blog", label: "Blog" },
-  { href: "/notices", label: "Notices" },
-  { href: "/contact", label: "Contact" },
+  { href: "/", key: "home" },
+  { href: "/about", key: "about" },
+  { href: "/focus", key: "focus" },
+  { href: "/stories", key: "stories" },
+  { href: "/blog", key: "blog" },
+  { href: "/notices", key: "notices" },
+  { href: "/enquiry", key: "enquiry" },
+  { href: "/contact", key: "contact" },
 ];
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
+  const t = useTranslations("nav");
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -59,7 +62,7 @@ export default function Navbar() {
               <Link
                 key={link.href}
                 href={link.href}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
+                className={`px-3 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
                   pathname === link.href
                     ? scrolled
                       ? "bg-emerald-50 text-emerald-700"
@@ -69,25 +72,31 @@ export default function Navbar() {
                     : "text-white/80 hover:text-white hover:bg-white/10"
                 }`}
               >
-                {link.label}
+                {t(link.key)}
               </Link>
             ))}
+            <LanguageSwitcher scrolled={scrolled} />
             <Link
               href="/donate"
-              className="ml-3 px-5 py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-xl text-sm font-semibold shadow-lg shadow-amber-500/25 hover:shadow-amber-500/40 hover:scale-105 transition-all duration-300 flex items-center gap-2"
+              className="ml-2 px-5 py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-xl text-sm font-semibold shadow-lg shadow-amber-500/25 hover:shadow-amber-500/40 hover:scale-105 transition-all duration-300 flex items-center gap-2"
             >
               <Heart size={16} fill="currentColor" />
-              Donate
+              {t("donate")}
             </Link>
           </div>
 
           {/* Mobile toggle */}
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            className={`lg:hidden p-2 rounded-lg ${scrolled ? "text-gray-700" : "text-white"}`}
-          >
-            {isOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
+          <div className="lg:hidden flex items-center gap-1">
+            <LanguageSwitcher scrolled={scrolled} />
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              aria-label={isOpen ? "Close menu" : "Open menu"}
+              aria-expanded={isOpen}
+              className={`p-2 rounded-lg ${scrolled ? "text-gray-700" : "text-white"}`}
+            >
+              {isOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
         </div>
       </div>
 
@@ -112,7 +121,7 @@ export default function Navbar() {
                       : "text-gray-600 hover:bg-gray-50"
                   }`}
                 >
-                  {link.label}
+                  {t(link.key)}
                 </Link>
               ))}
               <Link
@@ -120,7 +129,7 @@ export default function Navbar() {
                 onClick={closeMenu}
                 className="block mt-4 px-4 py-3 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-xl text-center text-sm font-semibold"
               >
-                💛 Donate Now
+                💛 {t("donate")}
               </Link>
             </div>
           </motion.div>

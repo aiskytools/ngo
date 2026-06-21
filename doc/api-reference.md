@@ -30,9 +30,9 @@ The session cookie is **httpOnly**, `sameSite=lax`, `secure` in production, and 
 | Method | Path | Auth | Notes |
 |---|---|---|---|
 | GET | `/api/blogs` | 🌐 | Paginated. Query: `page`, `limit` (default 20, max 100). Returns `{ items, page, limit, total }`. |
-| POST | `/api/blogs` | 🔒 | Body `{ title, category, description, image?, imagePublicId? }`. |
-| GET | `/api/blogs/[id]` | 🌐 | Single post. |
-| PUT | `/api/blogs/[id]` | 🔒 | Partial update. Send `oldImagePublicId` to delete the replaced image. |
+| POST | `/api/blogs` | 🔒 | Body `{ title, category, contentHtml, description?, image?, imagePublicId? }`. `contentHtml` is the rich body — **sanitized server-side**; `description` is an optional excerpt (auto-derived if omitted). |
+| GET | `/api/blogs/[id]` | 🌐 | Single post (includes `contentHtml`). |
+| PUT | `/api/blogs/[id]` | 🔒 | Partial update. `contentHtml` is re-sanitized; send `oldImagePublicId` to delete the replaced image. |
 | DELETE | `/api/blogs/[id]` | 🔒 | Deletes the post and its Cloudinary image. |
 
 `category` ∈ General · Education · Health · Relief · Event.
@@ -54,7 +54,7 @@ The session cookie is **httpOnly**, `sameSite=lax`, `secure` in production, and 
 | Method | Path | Auth | Notes |
 |---|---|---|---|
 | GET | `/api/stories` | 🌐 | Paginated (default 50). `?featured=1` returns only featured stories. |
-| POST | `/api/stories` | 🔒 | Body `{ name, location, tag, theme, icon?, background, intervention, outcome, featured? }`. |
+| POST | `/api/stories` | 🔒 | Body `{ name, location, tag, theme, icon?, background, intervention, outcome, featured? }`. `background` & `intervention` are rich HTML (**sanitized server-side**); `outcome` is plain. |
 | GET | `/api/stories/[id]` | 🌐 | Single story. |
 | PUT | `/api/stories/[id]` | 🔒 | Partial update. |
 | DELETE | `/api/stories/[id]` | 🔒 | Delete. |
@@ -88,11 +88,36 @@ The session cookie is **httpOnly**, `sameSite=lax`, `secure` in production, and 
 
 `fund` ∈ General Fund · Education & Scholarships · Health Camps · Women Empowerment · Rural Development.
 
+## Enquiries
+
+| Method | Path | Auth | Notes |
+|---|---|---|---|
+| POST | `/api/enquiries` | 🌐 | Public submit. Body `{ name, phone, email, category, subject, message, website? }`. `website` is a honeypot. Rate-limited **10/hour/IP**. Stored with status `New`. |
+| GET | `/api/enquiries` | 🔒 | Paginated. `?status=` filter and `?q=` search (name/email/subject/message/phone). Returns `{ items, total, newCount, … }`. |
+| GET | `/api/enquiries/[id]` | 🔒 | Single enquiry. |
+| PATCH | `/api/enquiries/[id]` | 🔒 | Body `{ status }`. `status` ∈ New · Read · Replied · Archived. |
+| DELETE | `/api/enquiries/[id]` | 🔒 | Delete an enquiry. |
+
+`category` ∈ General · Donation · Volunteer · Partnership · Sponsorship · Media.
+
+## Admin dashboard
+
+| Method | Path | Auth | Notes |
+|---|---|---|---|
+| GET | `/api/admin/stats` | 🔒 | Dashboard metrics: `{ counts, donations: { raised, paidCount }, pending, monthly: { labels, donationAmount, donationCount, enquiries, contacts } }` (last 6 months). |
+
 ## Upload
 
 | Method | Path | Auth | Notes |
 |---|---|---|---|
 | POST | `/api/upload` | 🔒 | Body `{ image }` — a base64 data URL (PNG/JPEG/WebP, ≤ 5 MB). Uploads to Cloudinary, returns `{ url, publicId }`. |
+
+## SEO routes
+
+| Path | Notes |
+|---|---|
+| `/sitemap.xml` | Dynamic — static routes + all blog/notice detail URLs (falls back to static routes if the DB is unreachable). |
+| `/robots.txt` | Allows everything except `/admin` and `/api/`; references the sitemap. |
 
 ---
 
