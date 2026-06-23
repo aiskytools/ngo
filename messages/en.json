@@ -9,6 +9,14 @@
     "hi": "हिन्दी",
     "mr": "मराठी"
   },
+  "common": {
+    "skipToContent": "Skip to main content"
+  },
+  "whatsapp": {
+    "label": "Chat with us",
+    "aria": "Chat with us on WhatsApp",
+    "prefill": "Hello Aadhar Manuskicha, I have a question."
+  },
   "nav": {
     "home": "Home",
     "about": "About",
@@ -18,7 +26,9 @@
     "notices": "Notices",
     "enquiry": "Enquiry",
     "contact": "Contact",
-    "donate": "Donate"
+    "donate": "Donate",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu"
   },
   "footer": {
     "tagline": "Inspired by Sant Gadgebaba, transforming rural lives through education, healthcare, and community development since 2001.",
@@ -60,6 +70,275 @@
     "pillarEducation": "Education",
     "pillarRural": "Rural Dev",
     "pillarHealth": "Health",
-    "pillarWomen": "Women"
+    "pillarWomen": "Women",
+    "todayLabel": "Today:",
+    "ticker": [
+      "Education & Literacy",
+      "Farmer Welfare",
+      "Free Medical Camps",
+      "Women's Self-Help Groups",
+      "Youth Skill Development",
+      "Disaster Relief"
+    ],
+    "missions": [
+      { "title": "Education", "desc": "Scholarships, educational materials, and dropout prevention for underprivileged children.", "tags": ["Scholarships", "Supplies"] },
+      { "title": "Rural Development", "desc": "Empowering farming families with sustainable agriculture and government scheme access.", "tags": ["Farmers", "Infrastructure"] },
+      { "title": "Healthcare", "desc": "Free medical, eye, and blood donation camps bringing healthcare to villages.", "tags": ["Medical Camps", "Awareness"] },
+      { "title": "Women Empowerment", "desc": "Self-help groups, vocational training, and legal literacy for rural women.", "tags": ["Bachat Gats", "Training"] }
+    ]
+  },
+  "about": {
+    "metaTitle": "About Us | Aadhar Manuskicha",
+    "heroTitle": "About Us",
+    "heroSubtitle": "Our journey, our inspiration, and our commitment to humanity.",
+    "founded": "Founded",
+    "journeyLabel": "Our Journey",
+    "journeyTitle": "Rooted in Marathwada, Driven by Humanity.",
+    "story1": "Founded on 18 July 2001 in Ambajogai, Beed, Aadhar Manuskicha began with a simple yet profound belief: that every life deserves a strong foundation of dignity and support.",
+    "story2": "Our organization was born out of a deep understanding of the unique challenges faced by the people of the Marathwada region—from recurring droughts and agrarian crises to limited access to quality education and healthcare.",
+    "story3": "Over the past 23+ years, we have grown from a small group of passionate volunteers into a registered charitable trust that actively impacts thousands of lives across 25+ villages.",
+    "valuesLabel": "Our Values",
+    "valuesTitle": "What Drives Us",
+    "values": [
+      { "title": "Vision", "desc": "A society where every individual, regardless of background, has access to education, healthcare, and a dignified life." },
+      { "title": "Mission", "desc": "To empower marginalized communities of Marathwada through sustainable grassroots interventions in education, health, and livelihoods." },
+      { "title": "Transparency", "desc": "We maintain 100% financial and operational transparency, ensuring every rupee directly reaches beneficiaries." },
+      { "title": "Sustainability", "desc": "Our interventions focus on self-reliance rather than temporary relief or dependency." }
+    ],
+    "gadgebabaTitle": "Our Guiding Light: Sant Gadgebaba",
+    "gadgebabaText": "Sant Gadgebaba Sevabhavi Sanstha operates under the profound inspiration of Sant Gadgebaba, a mendicant-saint and social reformer from Maharashtra. He traveled village to village, sweeping streets and preaching cleanliness, eradication of blind faith, and the supreme importance of education.",
+    "gadgebabaQuoteSub": "(Humanity is the greatest wealth)",
+    "founderName": "Adv. Santosh A. Pawar",
+    "founderRole": "Founder & President",
+    "founderP1": "An advocate by profession and a social worker by calling, Adv. Santosh Pawar established Aadhar Manuskicha with a vision to provide legal, educational, and social aid to the voiceless.",
+    "founderP2": "Under his leadership, the organization has prioritized immediate action and transparent operations, building deep trust within the Ambajogai community over the last two decades.",
+    "officialLabel": "Official Details",
+    "officialTitle": "Registration & Contact Info",
+    "regNameLabel": "Registered Name",
+    "regNameValue": "Sant Gadgebaba Sevabhavi Sanstha",
+    "popularNameLabel": "Popular Name",
+    "popularNameValue": "Aadhar Manuskicha (आधार माणुसकीचा)",
+    "establishedLabel": "Established",
+    "establishedValue": "18 July 2001",
+    "orgTypeLabel": "Org. Type",
+    "orgTypeValue": "Registered Charitable Trust / NGO",
+    "registeredOfficeLabel": "Registered Office",
+    "registeredOfficeValue": "At. Shivajinagar, Bank Colony, Jogaiwadi, Ambajogai, Beed – 431517, Maharashtra"
+  },
+  "focus": {
+    "metaTitle": "Focus Areas | Aadhar Manuskicha",
+    "heroTitle": "Our Focus Areas",
+    "heroSubtitle": "Comprehensive, grassroots interventions designed for holistic development in Marathwada.",
+    "ctaTitle": "Support Our Interventions",
+    "ctaText": "You can support our work broadly, or direct your donation to a specific focus area.",
+    "donateBtn": "Make a Donation",
+    "partnerBtn": "Partner With Us",
+    "areas": [
+      {
+        "title": "Education & Literacy",
+        "desc": "We believe education is the primary tool to break the cycle of poverty.",
+        "items": [
+          "Annual full scholarships for meritorious students",
+          "Distribution of books, uniforms, and stationery kits",
+          "Dropout prevention counseling for at-risk families",
+          "Career guidance and mentorship programs"
+        ],
+        "tags": ["Scholarships", "School Supplies", "Mentorship"]
+      },
+      {
+        "title": "Rural Development",
+        "desc": "Addressing the core economic engine of Marathwada by supporting farmers.",
+        "items": [
+          "Farmer welfare advocacy during agrarian crises",
+          "Facilitating access to government agriculture schemes",
+          "Awareness on sustainable and water-efficient farming",
+          "Village infrastructure and sanitation initiatives"
+        ],
+        "tags": ["Farmer Welfare", "Sustainability", "Infrastructure"]
+      },
+      {
+        "title": "Health & Wellness",
+        "desc": "Bringing quality healthcare to remote villages, focusing on preventive care.",
+        "items": [
+          "Regular free general and specialized eye camps",
+          "Free medicine distribution for common ailments",
+          "Blood donation drives with local hospitals",
+          "Health and hygiene awareness programs in ZP schools"
+        ],
+        "tags": ["Medical Camps", "Medicine", "Blood Donation"]
+      },
+      {
+        "title": "Women Empowerment",
+        "desc": "Fostering financial independence and legal awareness among rural women.",
+        "items": [
+          "Formation of Bachat Gats (Self-Help Groups)",
+          "Vocational training (tailoring, beauty parlor, handicrafts)",
+          "Legal literacy regarding women's rights and property laws",
+          "Domestic violence prevention and social advocacy"
+        ],
+        "tags": ["Bachat Gats", "Vocational Training", "Legal Literacy"]
+      },
+      {
+        "title": "Youth & Skill Dev",
+        "desc": "Equipping the youth with modern skills for employment and entrepreneurship.",
+        "items": [
+          "Basic computer literacy and digital awareness",
+          "MPSC / competitive exam guidance and materials",
+          "Helpdesk for government employment schemes",
+          "Entrepreneurship mentoring for rural youth"
+        ],
+        "tags": ["MPSC Guidance", "Digital Literacy", "Govt Schemes"]
+      },
+      {
+        "title": "Disaster Relief & Aid",
+        "desc": "Acting as first responders during natural or man-made crises.",
+        "items": [
+          "Emergency food kit distribution during floods/droughts",
+          "COVID-19 era support (rations, medical facilitation)",
+          "Winter blanket distribution for destitute and homeless",
+          "Local volunteer network for rapid response"
+        ],
+        "tags": ["Food Aid", "Emergency Relief", "Winter Drives"]
+      }
+    ]
+  },
+  "contact": {
+    "heroTitle": "Get in Touch",
+    "heroSubtitle": "Whether you have questions, want to volunteer, or wish to partner with us — reach out.",
+    "reachUs": "Reach Us",
+    "reachText": "We are always happy to connect with people who share our vision.",
+    "labelAddress": "Address",
+    "labelPhone": "Phone",
+    "labelEmail": "Email",
+    "labelWebsite": "Website",
+    "formTitle": "Send Us a Message",
+    "formSubtitle": "We typically respond within 24–48 hours.",
+    "phName": "Full Name *",
+    "phEmail": "Email *",
+    "phPhone": "Phone",
+    "phMessage": "Write your message here...",
+    "subjects": {
+      "Donation Inquiry": "Donation Inquiry",
+      "Volunteer With Us": "Volunteer With Us",
+      "Partnership Proposal": "Partnership Proposal",
+      "Scholarship Inquiry": "Scholarship Inquiry",
+      "General Query": "General Query"
+    },
+    "send": "Send Message",
+    "sending": "Sending…",
+    "success": "Thank you! Your message has been received.",
+    "errorFailed": "Failed to send. Please try again.",
+    "errorNetwork": "Network error. Please try again."
+  },
+  "donate": {
+    "heroTitle": "Be Someone's Aadhar Today",
+    "heroSubtitle": "Your generosity directly funds education, healthcare, and livelihoods for families in Marathwada.",
+    "formTitle": "Make a Donation",
+    "formSubtitle": "Choose an amount or enter your own.",
+    "custom": "Custom",
+    "customPlaceholder": "Enter custom amount (₹)",
+    "phName": "Full Name *",
+    "phPhone": "Phone *",
+    "phEmail": "Email (for receipt)",
+    "funds": {
+      "General Fund": "General Fund",
+      "Education & Scholarships": "Education & Scholarships",
+      "Health Camps": "Health Camps",
+      "Women Empowerment": "Women Empowerment",
+      "Rural Development": "Rural Development"
+    },
+    "proceed": "Proceed to Donate",
+    "processing": "Processing…",
+    "taxNote": "All donations eligible for 80G Tax Exemption.",
+    "bankTitle": "Bank Transfer Details",
+    "bankSubtitle": "Prefer a direct bank transfer? Use the details below.",
+    "bankLabels": {
+      "Account Name": "Account Name",
+      "Account Number": "Account Number",
+      "IFSC Code": "IFSC Code",
+      "MICR Code": "MICR Code",
+      "Bank": "Bank"
+    },
+    "copy": "Copy",
+    "copied": "Copied",
+    "impactTitle": "Your Impact",
+    "impacts": [
+      "📚 Books & stationery for 1 child",
+      "👟 School uniform + shoes",
+      "🏥 Health camp for 10 patients",
+      "🎓 Full annual scholarship",
+      "🏠 One family's livelihood support"
+    ],
+    "badgeTransparent": "100% Transparent",
+    "badgeTax": "80G Tax Benefit",
+    "badgeDirect": "Direct to Beneficiaries",
+    "errMinAmount": "Please select or enter an amount of at least ₹100.",
+    "errOrder": "Could not create order",
+    "errVerify": "Payment verification failed",
+    "errSdk": "Payment SDK not loaded yet. Please retry in a moment.",
+    "errCancelled": "Payment cancelled",
+    "errFailed": "Payment failed",
+    "errGeneric": "Something went wrong.",
+    "successTemplate": "Thank you, {name}! Your donation of ₹{amount} has been received. A receipt will be emailed shortly."
+  },
+  "enquiry": {
+    "metaTitle": "Make an Enquiry | Aadhar Manuskicha",
+    "metaDescription": "Send an enquiry to Aadhar Manuskicha about donations, volunteering, partnerships, sponsorships, or media.",
+    "heroTitle": "Make an Enquiry",
+    "heroSubtitle": "Donations, volunteering, partnerships, sponsorships, media — tell us how we can help.",
+    "formTitle": "Enquiry Form",
+    "formSubtitle": "We typically respond within 24–48 hours.",
+    "fullName": "Full Name",
+    "phName": "Your full name",
+    "phoneLabel": "Phone Number",
+    "phPhone": "+91 …",
+    "emailLabel": "Email",
+    "phEmail": "you@example.com",
+    "categoryLabel": "Category",
+    "categories": {
+      "General": "General",
+      "Donation": "Donation",
+      "Volunteer": "Volunteer",
+      "Partnership": "Partnership",
+      "Sponsorship": "Sponsorship",
+      "Media": "Media"
+    },
+    "subjectLabel": "Subject",
+    "phSubject": "Brief subject",
+    "messageLabel": "Message",
+    "phMessage": "How can we help?",
+    "submit": "Submit Enquiry",
+    "sending": "Sending…",
+    "success": "Thank you! Your enquiry has been received — we'll get back to you soon.",
+    "errorFailed": "Failed to send. Please try again.",
+    "errorNetwork": "Network error. Please try again."
+  },
+  "stories": {
+    "metaTitle": "Stories of Change | Aadhar Manuskicha",
+    "heroTitle": "Stories of Change",
+    "heroSubtitle": "Real lives transformed through education, opportunity, and unwavering community support.",
+    "background": "Background",
+    "whatWeDid": "What We Did",
+    "today": "Today"
+  },
+  "blog": {
+    "heroTitle": "Blog & Updates",
+    "heroSubtitle": "Stay connected with our latest activities, events, and impact stories.",
+    "readMore": "Read More",
+    "backToBlog": "Back to Blog",
+    "sharePost": "Share This Post",
+    "morePosts": "More Posts",
+    "notFound": "Post Not Found",
+    "linkCopied": "Link copied to clipboard!"
+  },
+  "notices": {
+    "heroTitle": "Notice Board",
+    "heroSubtitle": "Stay informed about our upcoming events, programs, and announcements.",
+    "viewDetails": "View Details",
+    "backToNotices": "Back to Notices",
+    "shareNotice": "Share This Notice",
+    "moreNotices": "More Notices",
+    "notFound": "Notice Not Found",
+    "linkCopied": "Link copied to clipboard!"
   }
 }

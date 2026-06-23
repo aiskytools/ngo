@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import AnimatedSection from "@/app/components/AnimatedSection";
 
@@ -13,6 +14,7 @@ const typeIcons = { Event: "📅", Invitation: "🎉", Program: "🎪", Urgent: 
 const typeColors = { Event: "bg-blue-500", Invitation: "bg-amber-500", Program: "bg-emerald-600", Urgent: "bg-red-600", Update: "bg-gray-600" };
 
 export default function NoticesPage() {
+  const t = useTranslations("notices");
   const [notices, setNotices] = useState(defaultNotices);
 
   useEffect(() => {
@@ -32,8 +34,8 @@ export default function NoticesPage() {
       <section className="relative pt-32 pb-20 gradient-mesh overflow-hidden">
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <AnimatedSection>
-            <h1 className="font-[family-name:var(--font-heading)] text-5xl sm:text-6xl font-bold text-white mb-4">Notice Board</h1>
-            <p className="text-gray-300 text-lg max-w-2xl mx-auto">Stay informed about our upcoming events, programs, and announcements.</p>
+            <h1 className="font-[family-name:var(--font-heading)] text-5xl sm:text-6xl font-bold text-white mb-4">{t("heroTitle")}</h1>
+            <p className="text-gray-300 text-lg max-w-2xl mx-auto">{t("heroSubtitle")}</p>
           </AnimatedSection>
         </div>
       </section>
@@ -56,7 +58,7 @@ export default function NoticesPage() {
                       </span>
                       <h3 className="font-[family-name:var(--font-heading)] text-lg font-bold text-gray-900 mt-2 mb-2">{n.title}</h3>
                       <p className="text-gray-500 text-sm leading-relaxed">{n.description?.substring(0, 150)}{n.description?.length > 150 ? "..." : ""}</p>
-                      <span className="text-amber-600 font-semibold text-sm mt-3 inline-block">View Details →</span>
+                      <span className="text-amber-600 font-semibold text-sm mt-3 inline-block">{t("viewDetails")} →</span>
                     </div>
                   </div>
                 </Link>

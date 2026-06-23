@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
+import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import Image from "next/image";
 import { useParams } from "next/navigation";
@@ -15,6 +16,7 @@ const defaultPosts = {
 };
 
 export default function BlogDetailPage() {
+  const t = useTranslations("blog");
   const { id } = useParams();
   const [post, setPost] = useState(() => (id && defaultPosts[id]) || null);
   const [loading, setLoading] = useState(() => !!id && !defaultPosts[id]);
@@ -43,12 +45,12 @@ export default function BlogDetailPage() {
       navigator.share({ title: post.title, text: post.description?.substring(0, 200), url });
     } else if (navigator.clipboard) {
       navigator.clipboard.writeText(url);
-      alert("Link copied to clipboard!");
+      alert(t("linkCopied"));
     }
   };
 
   if (loading) return <div className="min-h-screen flex items-center justify-center pt-20"><div className="animate-spin w-8 h-8 border-4 border-amber-500 border-t-transparent rounded-full" /></div>;
-  if (!post) return <div className="min-h-screen flex flex-col items-center justify-center pt-20"><h2 className="text-2xl font-bold text-gray-900 mb-4">Post Not Found</h2><Link href="/blog" className="text-amber-600 font-semibold">← Back to Blog</Link></div>;
+  if (!post) return <div className="min-h-screen flex flex-col items-center justify-center pt-20"><h2 className="text-2xl font-bold text-gray-900 mb-4">{t("notFound")}</h2><Link href="/blog" className="text-amber-600 font-semibold">← {t("backToBlog")}</Link></div>;
 
   const catColors = { Education: "bg-blue-500", Health: "bg-rose-500", Relief: "bg-orange-600", Event: "bg-amber-500", General: "bg-gray-600" };
 
@@ -65,7 +67,7 @@ export default function BlogDetailPage() {
         <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <AnimatedSection>
             <Link href="/blog" className="inline-flex items-center gap-2 text-white/70 hover:text-white transition-colors text-sm mb-6 group">
-              <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" /> Back to Blog
+              <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" /> {t("backToBlog")}
             </Link>
             <span className={`inline-block ${catColors[post.category] || catColors.General} text-white text-xs font-bold px-3 py-1 rounded-full mb-4`}>{post.category}</span>
             <h1 className="font-[family-name:var(--font-heading)] text-4xl sm:text-5xl font-bold text-white mb-4 leading-tight">{post.title}</h1>
@@ -90,8 +92,8 @@ export default function BlogDetailPage() {
               </div>
             )}
             <div className="mt-12 pt-8 border-t border-gray-100 flex flex-wrap gap-4 items-center justify-between">
-              <button onClick={share} className="px-6 py-3 bg-gray-950 text-white rounded-xl font-semibold hover:bg-gray-800 transition-colors flex items-center gap-2"><Share2 size={16} /> Share This Post</button>
-              <Link href="/blog" className="text-amber-600 font-semibold hover:text-amber-700 transition-colors">← More Posts</Link>
+              <button onClick={share} className="px-6 py-3 bg-gray-950 text-white rounded-xl font-semibold hover:bg-gray-800 transition-colors flex items-center gap-2"><Share2 size={16} /> {t("sharePost")}</button>
+              <Link href="/blog" className="text-amber-600 font-semibold hover:text-amber-700 transition-colors">← {t("morePosts")}</Link>
             </div>
           </AnimatedSection>
         </div>

@@ -1,27 +1,36 @@
 import AnimatedSection from "@/app/components/AnimatedSection";
-import SectionHeading from "@/app/components/SectionHeading";
 import { Link } from "@/i18n/navigation";
+import { setRequestLocale, getTranslations } from "next-intl/server";
 import { BookOpen, Sprout, Stethoscope, Users, Briefcase, HandHeart, Heart } from "lucide-react";
 
-export const metadata = { title: "Focus Areas | Aadhar Manuskicha" };
-
-const areas = [
-  { icon: BookOpen, title: "Education & Literacy", color: "from-blue-500 to-cyan-500", desc: "We believe education is the primary tool to break the cycle of poverty.", items: ["Annual full scholarships for meritorious students", "Distribution of books, uniforms, and stationery kits", "Dropout prevention counseling for at-risk families", "Career guidance and mentorship programs"], tags: ["Scholarships", "School Supplies", "Mentorship"] },
-  { icon: Sprout, title: "Rural Development", color: "from-emerald-500 to-green-500", desc: "Addressing the core economic engine of Marathwada by supporting farmers.", items: ["Farmer welfare advocacy during agrarian crises", "Facilitating access to government agriculture schemes", "Awareness on sustainable and water-efficient farming", "Village infrastructure and sanitation initiatives"], tags: ["Farmer Welfare", "Sustainability", "Infrastructure"] },
-  { icon: Stethoscope, title: "Health & Wellness", color: "from-rose-500 to-pink-500", desc: "Bringing quality healthcare to remote villages, focusing on preventive care.", items: ["Regular free general and specialized eye camps", "Free medicine distribution for common ailments", "Blood donation drives with local hospitals", "Health and hygiene awareness programs in ZP schools"], tags: ["Medical Camps", "Medicine", "Blood Donation"] },
-  { icon: Users, title: "Women Empowerment", color: "from-purple-500 to-violet-500", desc: "Fostering financial independence and legal awareness among rural women.", items: ["Formation of Bachat Gats (Self-Help Groups)", "Vocational training (tailoring, beauty parlor, handicrafts)", "Legal literacy regarding women's rights and property laws", "Domestic violence prevention and social advocacy"], tags: ["Bachat Gats", "Vocational Training", "Legal Literacy"] },
-  { icon: Briefcase, title: "Youth & Skill Dev", color: "from-amber-500 to-orange-500", desc: "Equipping the youth with modern skills for employment and entrepreneurship.", items: ["Basic computer literacy and digital awareness", "MPSC / competitive exam guidance and materials", "Helpdesk for government employment schemes", "Entrepreneurship mentoring for rural youth"], tags: ["MPSC Guidance", "Digital Literacy", "Govt Schemes"] },
-  { icon: HandHeart, title: "Disaster Relief & Aid", color: "from-red-500 to-rose-500", desc: "Acting as first responders during natural or man-made crises.", items: ["Emergency food kit distribution during floods/droughts", "COVID-19 era support (rations, medical facilitation)", "Winter blanket distribution for destitute and homeless", "Local volunteer network for rapid response"], tags: ["Food Aid", "Emergency Relief", "Winter Drives"] },
+const areaMeta = [
+  { icon: BookOpen, color: "from-blue-500 to-cyan-500" },
+  { icon: Sprout, color: "from-emerald-500 to-green-500" },
+  { icon: Stethoscope, color: "from-rose-500 to-pink-500" },
+  { icon: Users, color: "from-purple-500 to-violet-500" },
+  { icon: Briefcase, color: "from-amber-500 to-orange-500" },
+  { icon: HandHeart, color: "from-red-500 to-rose-500" },
 ];
 
-export default function FocusPage() {
+export async function generateMetadata({ params }) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "focus" });
+  return { title: t("metaTitle") };
+}
+
+export default async function FocusPage({ params }) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+  const t = await getTranslations("focus");
+  const areas = t.raw("areas").map((a, i) => ({ ...a, ...areaMeta[i] }));
+
   return (
     <>
       <section className="relative pt-32 pb-20 gradient-mesh overflow-hidden">
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <AnimatedSection>
-            <h1 className="font-[family-name:var(--font-heading)] text-5xl sm:text-6xl font-bold text-white mb-4">Our Focus Areas</h1>
-            <p className="text-gray-300 text-lg max-w-2xl mx-auto">Comprehensive, grassroots interventions designed for holistic development in Marathwada.</p>
+            <h1 className="font-[family-name:var(--font-heading)] text-5xl sm:text-6xl font-bold text-white mb-4">{t("heroTitle")}</h1>
+            <p className="text-gray-300 text-lg max-w-2xl mx-auto">{t("heroSubtitle")}</p>
           </AnimatedSection>
         </div>
       </section>
@@ -48,8 +57,8 @@ export default function FocusPage() {
                     ))}
                   </ul>
                   <div className="flex flex-wrap gap-2">
-                    {a.tags.map((t) => (
-                      <span key={t} className="text-xs font-medium px-3 py-1 rounded-full bg-gray-50 text-gray-600 border border-gray-100">{t}</span>
+                    {a.tags.map((tag) => (
+                      <span key={tag} className="text-xs font-medium px-3 py-1 rounded-full bg-gray-50 text-gray-600 border border-gray-100">{tag}</span>
                     ))}
                   </div>
                 </div>
@@ -61,11 +70,11 @@ export default function FocusPage() {
 
       <section className="py-20 bg-white text-center">
         <AnimatedSection>
-          <h2 className="font-[family-name:var(--font-heading)] text-3xl font-bold text-gray-900 mb-4">Support Our Interventions</h2>
-          <p className="text-gray-500 max-w-xl mx-auto mb-8">You can support our work broadly, or direct your donation to a specific focus area.</p>
+          <h2 className="font-[family-name:var(--font-heading)] text-3xl font-bold text-gray-900 mb-4">{t("ctaTitle")}</h2>
+          <p className="text-gray-500 max-w-xl mx-auto mb-8">{t("ctaText")}</p>
           <div className="flex flex-wrap justify-center gap-4">
-            <Link href="/donate" className="px-8 py-4 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-2xl font-semibold shadow-lg hover:scale-105 transition-all flex items-center gap-2"><Heart size={18} fill="currentColor" />Make a Donation</Link>
-            <Link href="/contact" className="px-8 py-4 border-2 border-emerald-600 text-emerald-700 rounded-2xl font-semibold hover:bg-emerald-50 transition-all">Partner With Us</Link>
+            <Link href="/donate" className="px-8 py-4 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-2xl font-semibold shadow-lg hover:scale-105 transition-all flex items-center gap-2"><Heart size={18} fill="currentColor" />{t("donateBtn")}</Link>
+            <Link href="/contact" className="px-8 py-4 border-2 border-emerald-600 text-emerald-700 rounded-2xl font-semibold hover:bg-emerald-50 transition-all">{t("partnerBtn")}</Link>
           </div>
         </AnimatedSection>
       </section>

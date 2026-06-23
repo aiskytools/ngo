@@ -69,13 +69,14 @@ export default async function LocaleLayout({ children, params }) {
   if (!hasLocale(routing.locales, locale)) notFound();
   setRequestLocale(locale);
   const messages = await getMessages();
+  const t = await getTranslations("common");
 
   return (
     <html lang={locale} className={`${playfair.variable} ${inter.variable}`}>
       <body className="antialiased">
         <NextIntlClientProvider messages={messages}>
           <a href="#main-content" className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100] focus:px-4 focus:py-2 focus:rounded-lg focus:bg-emerald-700 focus:text-white">
-            Skip to main content
+            {t("skipToContent")}
           </a>
           <Navbar />
           <main id="main-content" className="min-h-screen">{children}</main>

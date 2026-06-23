@@ -35,20 +35,13 @@ function Counter({ from = 0, to }) {
   return <span ref={ref}>{count}+</span>;
 }
 
-const missions = [
-  { icon: BookOpen, title: "Education", desc: "Scholarships, educational materials, and dropout prevention for underprivileged children.", color: "from-blue-500 to-cyan-500", tags: ["Scholarships", "Supplies"] },
-  { icon: Sprout, title: "Rural Development", desc: "Empowering farming families with sustainable agriculture and government scheme access.", color: "from-emerald-500 to-green-500", tags: ["Farmers", "Infrastructure"] },
-  { icon: Stethoscope, title: "Healthcare", desc: "Free medical, eye, and blood donation camps bringing healthcare to villages.", color: "from-rose-500 to-pink-500", tags: ["Medical Camps", "Awareness"] },
-  { icon: Users, title: "Women Empowerment", desc: "Self-help groups, vocational training, and legal literacy for rural women.", color: "from-purple-500 to-violet-500", tags: ["Bachat Gats", "Training"] },
-];
-
-const tickerItems = [
-  "Education & Literacy",
-  "Farmer Welfare",
-  "Free Medical Camps",
-  "Women's Self-Help Groups",
-  "Youth Skill Development",
-  "Disaster Relief",
+// Visual metadata for the mission cards; text comes from the `home.missions`
+// translations and is zipped in by index inside the component.
+const missionMeta = [
+  { icon: BookOpen, color: "from-blue-500 to-cyan-500" },
+  { icon: Sprout, color: "from-emerald-500 to-green-500" },
+  { icon: Stethoscope, color: "from-rose-500 to-pink-500" },
+  { icon: Users, color: "from-purple-500 to-violet-500" },
 ];
 
 const pillars = [
@@ -64,6 +57,8 @@ const featuredSeeds = storySeeds.filter(s => s.featured).slice(0, 3);
 
 export default function HomePage() {
   const t = useTranslations("home");
+  const missions = t.raw("missions").map((m, i) => ({ ...m, ...missionMeta[i] }));
+  const tickerItems = t.raw("ticker");
   const [stories, setStories] = useState(featuredSeeds);
 
   useEffect(() => {
@@ -263,7 +258,7 @@ export default function HomePage() {
                     <p className="text-gray-500 text-sm leading-relaxed mb-4">{s.snippet || `${s.background?.replace(/<[^>]*>/g, "").slice(0, 120)}…`}</p>
                     <div className="pt-4 border-t border-gray-100">
                       <span className="text-emerald-700 font-semibold text-sm">
-                        <strong>Today:</strong> {s.outcome}
+                        <strong>{t("todayLabel")}</strong> {s.outcome}
                       </span>
                     </div>
                   </div>

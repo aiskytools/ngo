@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import AnimatedSection from "@/app/components/AnimatedSection";
 import { ENQUIRY_CATEGORIES } from "@/lib/status";
 import { analytics } from "@/lib/analytics";
@@ -8,6 +9,8 @@ import { Send, Loader2, CheckCircle2, AlertCircle, MessageSquare } from "lucide-
 const field = "w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500";
 
 export default function EnquiryPage() {
+  const t = useTranslations("enquiry");
+  const categoryLabels = t.raw("categories");
   const [status, setStatus] = useState({ state: "idle", message: "" });
   const submitting = status.state === "submitting";
 
@@ -34,14 +37,14 @@ export default function EnquiryPage() {
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
-        setStatus({ state: "error", message: data.error || "Failed to send. Please try again." });
+        setStatus({ state: "error", message: data.error || t("errorFailed") });
         return;
       }
       analytics.enquirySubmit(payload.category);
-      setStatus({ state: "success", message: "Thank you! Your enquiry has been received — we'll get back to you soon." });
+      setStatus({ state: "success", message: t("success") });
       e.target.reset();
     } catch {
-      setStatus({ state: "error", message: "Network error. Please try again." });
+      setStatus({ state: "error", message: t("errorNetwork") });
     }
   };
 
@@ -50,8 +53,8 @@ export default function EnquiryPage() {
       <section className="relative pt-32 pb-20 gradient-mesh overflow-hidden">
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <AnimatedSection>
-            <h1 className="font-[family-name:var(--font-heading)] text-5xl sm:text-6xl font-bold text-white mb-4">Make an Enquiry</h1>
-            <p className="text-gray-300 text-lg max-w-2xl mx-auto">Donations, volunteering, partnerships, sponsorships, media — tell us how we can help.</p>
+            <h1 className="font-[family-name:var(--font-heading)] text-5xl sm:text-6xl font-bold text-white mb-4">{t("heroTitle")}</h1>
+            <p className="text-gray-300 text-lg max-w-2xl mx-auto">{t("heroSubtitle")}</p>
           </AnimatedSection>
         </div>
       </section>
@@ -63,48 +66,48 @@ export default function EnquiryPage() {
               <div className="flex items-center gap-3 mb-6">
                 <div className="w-11 h-11 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center"><MessageSquare size={20} /></div>
                 <div>
-                  <h2 className="font-[family-name:var(--font-heading)] text-2xl font-bold text-gray-900">Enquiry Form</h2>
-                  <p className="text-gray-500 text-sm">We typically respond within 24–48 hours.</p>
+                  <h2 className="font-[family-name:var(--font-heading)] text-2xl font-bold text-gray-900">{t("formTitle")}</h2>
+                  <p className="text-gray-500 text-sm">{t("formSubtitle")}</p>
                 </div>
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-4" noValidate>
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div>
-                    <label htmlFor="enq-name" className="block text-sm font-medium text-gray-600 mb-1">Full Name <span className="text-rose-500">*</span></label>
-                    <input id="enq-name" name="name" required maxLength={200} autoComplete="name" placeholder="Your full name" className={field} />
+                    <label htmlFor="enq-name" className="block text-sm font-medium text-gray-600 mb-1">{t("fullName")} <span className="text-rose-500">*</span></label>
+                    <input id="enq-name" name="name" required maxLength={200} autoComplete="name" placeholder={t("phName")} className={field} />
                   </div>
                   <div>
-                    <label htmlFor="enq-phone" className="block text-sm font-medium text-gray-600 mb-1">Phone Number <span className="text-rose-500">*</span></label>
-                    <input id="enq-phone" name="phone" required type="tel" maxLength={20} autoComplete="tel" placeholder="+91 …" className={field} />
+                    <label htmlFor="enq-phone" className="block text-sm font-medium text-gray-600 mb-1">{t("phoneLabel")} <span className="text-rose-500">*</span></label>
+                    <input id="enq-phone" name="phone" required type="tel" maxLength={20} autoComplete="tel" placeholder={t("phPhone")} className={field} />
                   </div>
                 </div>
                 <div>
-                  <label htmlFor="enq-email" className="block text-sm font-medium text-gray-600 mb-1">Email <span className="text-rose-500">*</span></label>
-                  <input id="enq-email" name="email" required type="email" maxLength={254} autoComplete="email" placeholder="you@example.com" className={field} />
+                  <label htmlFor="enq-email" className="block text-sm font-medium text-gray-600 mb-1">{t("emailLabel")} <span className="text-rose-500">*</span></label>
+                  <input id="enq-email" name="email" required type="email" maxLength={254} autoComplete="email" placeholder={t("phEmail")} className={field} />
                 </div>
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div>
-                    <label htmlFor="enq-category" className="block text-sm font-medium text-gray-600 mb-1">Category <span className="text-rose-500">*</span></label>
+                    <label htmlFor="enq-category" className="block text-sm font-medium text-gray-600 mb-1">{t("categoryLabel")} <span className="text-rose-500">*</span></label>
                     <select id="enq-category" name="category" defaultValue="General" className={`${field} text-gray-600`}>
-                      {ENQUIRY_CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
+                      {ENQUIRY_CATEGORIES.map(c => <option key={c} value={c}>{categoryLabels[c]}</option>)}
                     </select>
                   </div>
                   <div>
-                    <label htmlFor="enq-subject" className="block text-sm font-medium text-gray-600 mb-1">Subject <span className="text-rose-500">*</span></label>
-                    <input id="enq-subject" name="subject" required maxLength={300} placeholder="Brief subject" className={field} />
+                    <label htmlFor="enq-subject" className="block text-sm font-medium text-gray-600 mb-1">{t("subjectLabel")} <span className="text-rose-500">*</span></label>
+                    <input id="enq-subject" name="subject" required maxLength={300} placeholder={t("phSubject")} className={field} />
                   </div>
                 </div>
                 <div>
-                  <label htmlFor="enq-message" className="block text-sm font-medium text-gray-600 mb-1">Message <span className="text-rose-500">*</span></label>
-                  <textarea id="enq-message" name="message" required rows={5} maxLength={5000} placeholder="How can we help?" className={`${field} resize-none`} />
+                  <label htmlFor="enq-message" className="block text-sm font-medium text-gray-600 mb-1">{t("messageLabel")} <span className="text-rose-500">*</span></label>
+                  <textarea id="enq-message" name="message" required rows={5} maxLength={5000} placeholder={t("phMessage")} className={`${field} resize-none`} />
                 </div>
 
                 {/* Honeypot — visually hidden; must stay empty. */}
                 <input name="website" type="text" tabIndex={-1} aria-hidden="true" autoComplete="off" style={{ position: "absolute", left: "-9999px", width: 1, height: 1, opacity: 0 }} />
 
                 <button type="submit" disabled={submitting} className="w-full py-4 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-2xl font-bold text-lg hover:shadow-lg hover:shadow-amber-500/30 transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed">
-                  {submitting ? <><Loader2 size={18} className="animate-spin" /> Sending…</> : <><Send size={18} /> Submit Enquiry</>}
+                  {submitting ? <><Loader2 size={18} className="animate-spin" /> {t("sending")}</> : <><Send size={18} /> {t("submit")}</>}
                 </button>
 
                 <div aria-live="polite">

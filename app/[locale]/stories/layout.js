@@ -1,4 +1,10 @@
-export const metadata = { title: "Stories of Change | Aadhar Manuskicha" };
+import { getTranslations } from "next-intl/server";
+
+export async function generateMetadata({ params }) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "stories" });
+  return { title: t("metaTitle") };
+}
 
 export default function StoriesLayout({ children }) {
   return children;

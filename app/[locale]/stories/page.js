@@ -1,10 +1,12 @@
 "use client";
 import { useState, useEffect } from "react";
+import { useTranslations } from "next-intl";
 import AnimatedSection from "@/app/components/AnimatedSection";
 import { storySeeds } from "@/lib/storySeeds";
 import { tagColor, themeGradient } from "@/lib/storyMeta";
 
 export default function StoriesPage() {
+  const t = useTranslations("stories");
   const [stories, setStories] = useState(storySeeds);
 
   useEffect(() => {
@@ -22,8 +24,8 @@ export default function StoriesPage() {
       <section className="relative pt-32 pb-20 gradient-mesh overflow-hidden">
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <AnimatedSection>
-            <h1 className="font-[family-name:var(--font-heading)] text-5xl sm:text-6xl font-bold text-white mb-4">Stories of Change</h1>
-            <p className="text-gray-300 text-lg max-w-2xl mx-auto">Real lives transformed through education, opportunity, and unwavering community support.</p>
+            <h1 className="font-[family-name:var(--font-heading)] text-5xl sm:text-6xl font-bold text-white mb-4">{t("heroTitle")}</h1>
+            <p className="text-gray-300 text-lg max-w-2xl mx-auto">{t("heroSubtitle")}</p>
           </AnimatedSection>
         </div>
       </section>
@@ -44,16 +46,16 @@ export default function StoriesPage() {
                   </div>
                   <div className="p-6 space-y-4">
                     <div>
-                      <h4 className="text-xs font-bold uppercase tracking-widest text-amber-600 mb-1">Background</h4>
+                      <h4 className="text-xs font-bold uppercase tracking-widest text-amber-600 mb-1">{t("background")}</h4>
                       {/* HTML from DB is sanitized on save; seed fallback text is trusted (in-repo). */}
                       <div className="prose prose-sm max-w-none text-gray-500 leading-relaxed" dangerouslySetInnerHTML={{ __html: s.background }} />
                     </div>
                     <div>
-                      <h4 className="text-xs font-bold uppercase tracking-widest text-amber-600 mb-1">What We Did</h4>
+                      <h4 className="text-xs font-bold uppercase tracking-widest text-amber-600 mb-1">{t("whatWeDid")}</h4>
                       <div className="prose prose-sm max-w-none text-gray-500 leading-relaxed" dangerouslySetInnerHTML={{ __html: s.intervention }} />
                     </div>
                     <div className="bg-emerald-50 border-l-4 border-emerald-600 rounded-r-xl p-4">
-                      <h4 className="text-xs font-bold uppercase tracking-widest text-emerald-700 mb-1">Today</h4>
+                      <h4 className="text-xs font-bold uppercase tracking-widest text-emerald-700 mb-1">{t("today")}</h4>
                       <p className="text-emerald-800 text-sm font-semibold">{s.outcome}</p>
                     </div>
                   </div>

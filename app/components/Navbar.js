@@ -90,7 +90,7 @@ export default function Navbar() {
             <LanguageSwitcher scrolled={scrolled} />
             <button
               onClick={() => setIsOpen(!isOpen)}
-              aria-label={isOpen ? "Close menu" : "Open menu"}
+              aria-label={isOpen ? t("closeMenu") : t("openMenu")}
               aria-expanded={isOpen}
               className={`p-2 rounded-lg ${scrolled ? "text-gray-700" : "text-white"}`}
             >

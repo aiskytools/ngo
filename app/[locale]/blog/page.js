@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import Image from "next/image";
 import AnimatedSection from "@/app/components/AnimatedSection";
@@ -15,6 +16,7 @@ const catIcons = { Education: "📚", Health: "🏥", Relief: "🤝", Event: "�
 const catColors = { Education: "bg-blue-500", Health: "bg-rose-500", Relief: "bg-orange-600", Event: "bg-amber-500", General: "bg-gray-600" };
 
 export default function BlogPage() {
+  const t = useTranslations("blog");
   const [posts, setPosts] = useState(defaultPosts);
 
   useEffect(() => {
@@ -34,8 +36,8 @@ export default function BlogPage() {
       <section className="relative pt-32 pb-20 gradient-mesh overflow-hidden">
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <AnimatedSection>
-            <h1 className="font-[family-name:var(--font-heading)] text-5xl sm:text-6xl font-bold text-white mb-4">Blog & Updates</h1>
-            <p className="text-gray-300 text-lg max-w-2xl mx-auto">Stay connected with our latest activities, events, and impact stories.</p>
+            <h1 className="font-[family-name:var(--font-heading)] text-5xl sm:text-6xl font-bold text-white mb-4">{t("heroTitle")}</h1>
+            <p className="text-gray-300 text-lg max-w-2xl mx-auto">{t("heroSubtitle")}</p>
           </AnimatedSection>
         </div>
       </section>
@@ -59,7 +61,7 @@ export default function BlogPage() {
                       <span className={`self-start ${catColors[post.category] || catColors.General} text-white text-xs font-bold px-3 py-1 rounded-full mb-3`}>{post.category}</span>
                       <h3 className="font-[family-name:var(--font-heading)] text-lg font-bold text-gray-900 mb-2">{post.title}</h3>
                       <p className="text-gray-500 text-sm flex-1">{post.description?.substring(0, 120)}...</p>
-                      <span className="text-amber-600 font-semibold text-sm mt-4 inline-block">Read More →</span>
+                      <span className="text-amber-600 font-semibold text-sm mt-4 inline-block">{t("readMore")} →</span>
                     </div>
                   </div>
                 </Link>

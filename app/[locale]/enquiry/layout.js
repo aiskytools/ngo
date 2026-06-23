@@ -1,7 +1,13 @@
-export const metadata = {
-  title: "Make an Enquiry | Aadhar Manuskicha",
-  description: "Send an enquiry to Aadhar Manuskicha about donations, volunteering, partnerships, sponsorships, or media.",
-};
+import { getTranslations } from "next-intl/server";
+
+export async function generateMetadata({ params }) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "enquiry" });
+  return {
+    title: t("metaTitle"),
+    description: t("metaDescription"),
+  };
+}
 
 export default function EnquiryLayout({ children }) {
   return children;

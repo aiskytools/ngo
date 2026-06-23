@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { useParams } from "next/navigation";
 import AnimatedSection from "@/app/components/AnimatedSection";
@@ -14,6 +15,7 @@ const defaultNotices = {
 const typeColors = { Event: "bg-blue-500", Invitation: "bg-amber-500", Program: "bg-emerald-600", Urgent: "bg-red-600", Update: "bg-gray-600" };
 
 export default function NoticeDetailPage() {
+  const t = useTranslations("notices");
   const { id } = useParams();
   const [notice, setNotice] = useState(() => (id && defaultNotices[id]) || null);
   const [loading, setLoading] = useState(() => !!id && !defaultNotices[id]);
@@ -33,12 +35,12 @@ export default function NoticeDetailPage() {
       navigator.share({ title: notice.title, text: notice.description?.substring(0, 200), url });
     } else if (navigator.clipboard) {
       navigator.clipboard.writeText(url);
-      alert("Link copied to clipboard!");
+      alert(t("linkCopied"));
     }
   };
 
   if (loading) return <div className="min-h-screen flex items-center justify-center pt-20"><div className="animate-spin w-8 h-8 border-4 border-amber-500 border-t-transparent rounded-full" /></div>;
-  if (!notice) return <div className="min-h-screen flex flex-col items-center justify-center pt-20"><h2 className="text-2xl font-bold text-gray-900 mb-4">Notice Not Found</h2><Link href="/notices" className="text-amber-600 font-semibold">← Back to Notices</Link></div>;
+  if (!notice) return <div className="min-h-screen flex flex-col items-center justify-center pt-20"><h2 className="text-2xl font-bold text-gray-900 mb-4">{t("notFound")}</h2><Link href="/notices" className="text-amber-600 font-semibold">← {t("backToNotices")}</Link></div>;
 
   return (
     <>
@@ -46,7 +48,7 @@ export default function NoticeDetailPage() {
         <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <AnimatedSection>
             <Link href="/notices" className="inline-flex items-center gap-2 text-white/70 hover:text-white transition-colors text-sm mb-6 group">
-              <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" /> Back to Notices
+              <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" /> {t("backToNotices")}
             </Link>
             <span className={`inline-block ${typeColors[notice.type] || typeColors.Update} text-white text-xs font-bold px-3 py-1 rounded-full mb-4`}>{notice.type}</span>
             <h1 className="font-[family-name:var(--font-heading)] text-4xl sm:text-5xl font-bold text-white mb-4 leading-tight">{notice.title}</h1>
@@ -65,8 +67,8 @@ export default function NoticeDetailPage() {
               {notice.description}
             </div>
             <div className="mt-12 pt-8 border-t border-gray-100 flex flex-wrap gap-4 items-center justify-between">
-              <button onClick={share} className="px-6 py-3 bg-gray-950 text-white rounded-xl font-semibold hover:bg-gray-800 transition-colors flex items-center gap-2"><Share2 size={16} /> Share This Notice</button>
-              <Link href="/notices" className="text-amber-600 font-semibold hover:text-amber-700 transition-colors">← More Notices</Link>
+              <button onClick={share} className="px-6 py-3 bg-gray-950 text-white rounded-xl font-semibold hover:bg-gray-800 transition-colors flex items-center gap-2"><Share2 size={16} /> {t("shareNotice")}</button>
+              <Link href="/notices" className="text-amber-600 font-semibold hover:text-amber-700 transition-colors">← {t("moreNotices")}</Link>
             </div>
           </AnimatedSection>
         </div>
